@@ -7,6 +7,6 @@ import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) {
-        Chapter7.p2563();
+        Chapter8.p2869();
     }
 }
