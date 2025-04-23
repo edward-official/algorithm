@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 public class Main {
     public static void main(String[] args) {
         try {
-            Chapter9.p11653();
+            Chapter10.p27323();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
