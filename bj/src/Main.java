@@ -32,13 +32,36 @@ class Chapter10 {
         writer.write(shortest + "\n");
         writer.flush();
     }
+    static void p3009() throws IOException {
+        StringTokenizer tokenizer;
+        tokenizer = new StringTokenizer(reader.readLine());
+        int x1 = Integer.parseInt(tokenizer.nextToken());
+        int y1 = Integer.parseInt(tokenizer.nextToken());
+        tokenizer = new StringTokenizer(reader.readLine());
+        int x2 = Integer.parseInt(tokenizer.nextToken());
+        int y2 = Integer.parseInt(tokenizer.nextToken());
+        tokenizer = new StringTokenizer(reader.readLine());
+        int x3 = Integer.parseInt(tokenizer.nextToken());
+        int y3 = Integer.parseInt(tokenizer.nextToken());
+
+        int x4, y4;
+        if(x1==x2) x4=x3;
+        else if(x1==x3) x4=x2;
+        else x4=x1;
+        if(y1==y2) y4=y3;
+        else if(y1==y3) y4=y2;
+        else y4=y1;
+
+        writer.write(x4 + " " + y4);
+        writer.flush();
+    }
 }
 
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Chapter10.p1085();
+            Chapter10.p3009();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
