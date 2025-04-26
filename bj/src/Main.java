@@ -55,13 +55,17 @@ class Chapter10 {
         writer.write(x4 + " " + y4);
         writer.flush();
     }
+    static void p15894() throws IOException {
+        writer.write("" + (Long.parseLong(reader.readLine())*4));
+        writer.flush();
+    }
 }
 
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Chapter10.p3009();
+            Chapter10.p15894();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
