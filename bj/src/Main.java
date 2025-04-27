@@ -59,13 +59,35 @@ class Chapter10 {
         writer.write("" + (Long.parseLong(reader.readLine())*4));
         writer.flush();
     }
+    static void p9063() throws IOException {
+        int loop = Integer.parseInt(reader.readLine());
+        StringTokenizer tokenizer = new StringTokenizer(reader.readLine());
+        int xMinimum = Integer.parseInt(tokenizer.nextToken());
+        int yMinimum = Integer.parseInt(tokenizer.nextToken());
+        int xMaximum = xMinimum;
+        int yMaximum = yMinimum;
+
+        for(int i=1; i<loop; i++) {
+            tokenizer = new StringTokenizer(reader.readLine());
+            int x = Integer.parseInt(tokenizer.nextToken());
+            int y = Integer.parseInt(tokenizer.nextToken());
+            if(x<xMinimum) xMinimum=x;
+            else if(xMaximum<x) xMaximum=x;
+            if(y<yMinimum) yMinimum=y;
+            else if(yMaximum<y) yMaximum=y;
+        }
+
+        int area = (xMaximum-xMinimum) * (yMaximum-yMinimum);
+        writer.write(area + "\n");
+        writer.flush();
+    }
 }
 
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Chapter10.p15894();
+            Chapter10.p9063();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
