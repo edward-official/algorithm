@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class Main {
     static class Chapter13 {
         static Scanner in = new Scanner(System.in);
+        static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         static void p2750() throws IOException {
             final int sizeOfArray = in.nextInt();
@@ -37,11 +38,42 @@ public class Main {
             List<Integer> sortedGrades = Arrays.stream(grades).boxed().sorted().collect(Collectors.toList());
             System.out.println(sortedGrades.get(numberOfStudents-numberOfAwards));
         }
+        static void merge(int[] array, int leftmost, int rightmost) {
+            int center = (leftmost+rightmost)/2;
+            int[] secondArray = new int[rightmost-leftmost+1];
+            int indexForSecondArray = 0;
+            int indexForLeftPart = leftmost;
+            int indexForRightPart = center+1;
+
+            while(indexForLeftPart<=center && indexForRightPart<=rightmost) {
+                if(array[indexForLeftPart] <= array[indexForRightPart]) secondArray[indexForSecondArray++] = array[indexForLeftPart++];
+                else secondArray[indexForSecondArray++] = array[indexForRightPart++];
+            }
+            while(indexForLeftPart<=center) secondArray[indexForSecondArray++] = array[indexForLeftPart++];
+            while(indexForRightPart<=rightmost) secondArray[indexForSecondArray++] = array[indexForRightPart++];
+
+            for(int index=leftmost; index<=rightmost; index++) array[index]=secondArray[index-leftmost];
+        }
+        static void mergesort(int[] array, int leftmost, int rightmost) {
+            if(leftmost>=rightmost) return;
+            int center = (leftmost+rightmost)/2;
+
+            mergesort(array, leftmost, center);
+            mergesort(array, center+1, rightmost);
+            merge(array, leftmost, rightmost);
+        }
+        static void p2751() throws IOException {
+            final int sizeOfInput = Integer.parseInt(reader.readLine());
+            int[] inputs = new int[sizeOfInput];
+            for(int index=0; index<sizeOfInput; index++) inputs[index]=Integer.parseInt(reader.readLine());
+            mergesort(inputs, 0, sizeOfInput-1);
+            for(int element: inputs) System.out.println(element);
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter13.p25305();
+            Chapter13.p2751();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
