@@ -69,11 +69,20 @@ public class Main {
             mergesort(inputs, 0, sizeOfInput-1);
             for(int element: inputs) System.out.println(element);
         }
+        static void p10989() throws IOException {
+            final int sizeOfInput = Integer.parseInt(reader.readLine());
+            int[] inputs = new int[sizeOfInput];
+            for(int index=0; index<sizeOfInput; index++) inputs[index]=Integer.parseInt(reader.readLine());
+            Arrays.sort(inputs);
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int element: inputs) stringBuilder.append(element + "\n");
+            System.out.println(stringBuilder);
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter13.p2751();
+            Chapter13.p10989();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
