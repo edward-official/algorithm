@@ -10,16 +10,16 @@ public class Main {
         static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         static BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        static int getGCD(int big, int small) {
+        static long getGCD(long big, long small) {
             if(big<small) return -1;
             while(small!=0) {
-                int temp = big;
+                long temp = big;
                 big = small;
                 small = temp%small;
             }
             return big;
         }
-        static int getLCM(int big, int small) {
+        static long getLCM(long big, long small) {
             if(big<small) return -1;
             return big*small/getGCD(big,small);
         }
@@ -37,11 +37,20 @@ public class Main {
             out.write(builder.toString());
             out.flush();
         }
+        static void p13241() throws IOException {
+            StringTokenizer tokenizer = new StringTokenizer(in.readLine());
+            long number1 = Integer.parseInt(tokenizer.nextToken());
+            long number2 = Integer.parseInt(tokenizer.nextToken());
+
+            if(number1>number2) out.write(getLCM(number1,number2) + "\n");
+            else out.write(getLCM(number2,number1) + "\n");
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter15.p1934();
+            Chapter15.p13241();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
