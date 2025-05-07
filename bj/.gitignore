@@ -29,4 +29,5 @@ bin/
 .DS_Store
 
 ### Edward LEE ###
-.idea/vcs.xml
+.idea
+bj.iml
