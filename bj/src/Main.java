@@ -46,11 +46,41 @@ public class Main {
             else out.write(getLCM(number2,number1) + "\n");
             out.flush();
         }
+        static void p1735() throws IOException {
+            StringTokenizer tokenizer;
+
+            tokenizer = new StringTokenizer(in.readLine());
+            int numerator1 = Integer.parseInt(tokenizer.nextToken());
+            int denominator1 = Integer.parseInt(tokenizer.nextToken());
+
+            tokenizer = new StringTokenizer(in.readLine());
+            int numerator2 = Integer.parseInt(tokenizer.nextToken());
+            int denominator2 = Integer.parseInt(tokenizer.nextToken());
+
+            int numeratorOfSum = numerator1*denominator2 + numerator2*denominator1;
+            int denominatorOfSum = denominator1*denominator2;
+            while(numeratorOfSum%2==0 && denominatorOfSum%2==0) {
+                numeratorOfSum/=2;
+                denominatorOfSum/=2;
+            }
+
+            int divider = 3;
+            while(divider<=numeratorOfSum && divider<=denominatorOfSum) {
+                if(numeratorOfSum%divider==0 && denominatorOfSum%divider==0) {
+                    numeratorOfSum/=divider;
+                    denominatorOfSum/=divider;
+                }
+                else divider+=2;
+            }
+
+            out.write(numeratorOfSum + " " + denominatorOfSum + "\n");
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter15.p13241();
+            Chapter15.p1735();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
