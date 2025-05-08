@@ -76,11 +76,34 @@ public class Main {
             out.write(numeratorOfSum + " " + denominatorOfSum + "\n");
             out.flush();
         }
+        static void p2485() throws IOException {
+            final int numberOfTrees = Integer.parseInt(in.readLine());
+            ArrayList<Integer> locationOfTrees = new ArrayList<>();
+            for(int index=0; index<numberOfTrees; index++) {
+                locationOfTrees.add(Integer.parseInt(in.readLine()));
+            }
+
+            int currentGCD = locationOfTrees.get(1)-locationOfTrees.get(0);
+            for(int index=2; index<numberOfTrees; index++) {
+                int interval = locationOfTrees.get(index)-locationOfTrees.get(index-1);
+                if(currentGCD<interval) currentGCD = (int)getGCD(interval, currentGCD);
+                else currentGCD = (int)getGCD(currentGCD, interval);
+            }
+
+            int count = 0;
+            for(int index=1; index<numberOfTrees; index++) {
+                int interval = locationOfTrees.get(index)-locationOfTrees.get(index-1);
+                count += (interval/currentGCD)-1;
+            }
+
+            out.write(count + "\n");
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter15.p1735();
+            Chapter15.p2485();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
