@@ -99,11 +99,44 @@ public class Main {
             out.write(count + "\n");
             out.flush();
         }
+        static boolean isPrime(long item) {
+            if(item<2) return false;
+            else if(item==2 || item==3) return true;
+            else if(item%2==0 || item%3==0) return false;
+            for(long divider=5; divider*divider<=item; divider+=6) {
+                if(item%divider==0 || item%(divider+2)==0) return false;
+            }
+            return true;
+        }
+        static long getMinimumPrimeNumber(long startingRange) {
+            long returningValue;
+            if(startingRange<0) return -1;
+            else if(startingRange==0 || startingRange==1 || startingRange==2) returningValue=2;
+            else if(startingRange%2==0) {
+                returningValue = startingRange+1;
+                while(!isPrime(returningValue)) returningValue+=2;
+            }
+            else {
+                returningValue = startingRange;
+                while(!isPrime(returningValue)) returningValue+=2;
+            }
+            return returningValue;
+        }
+        static void p4134() throws IOException {
+            final int numberOfInputs = Integer.parseInt(in.readLine());
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int n=0; n<numberOfInputs; n++) {
+                long itemToAppend = getMinimumPrimeNumber(Long.parseLong(in.readLine()));
+                stringBuilder.append(itemToAppend + "\n");
+            }
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter15.p2485();
+            Chapter15.p4134();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
