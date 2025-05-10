@@ -132,11 +132,42 @@ public class Main {
             out.write(stringBuilder.toString());
             out.flush();
         }
+        static ArrayList<Integer> getPrimeNumbers(int closingRange) {
+            ArrayList<Integer> primeNumbers = new ArrayList<>();
+            if(closingRange<2) return primeNumbers;
+            primeNumbers.add(2);
+            for(int item=3; item<=closingRange; item+=2) {
+                boolean isPrime = true;
+                for(int index=1; index<primeNumbers.size(); index++) {
+                    int divider = primeNumbers.get(index);
+                    if(divider*divider > item) break;
+                    if(item%divider == 0) {
+                        isPrime = false;
+                        break;
+                    }
+                }
+                if(isPrime) primeNumbers.add(item);
+            }
+            return primeNumbers;
+        }
+        static void p1929() throws IOException {
+            StringTokenizer tokenizer = new StringTokenizer(in.readLine());
+            final int openingRange = Integer.parseInt(tokenizer.nextToken());
+            final int closingRange = Integer.parseInt(tokenizer.nextToken());
+
+            ArrayList<Integer> primeNumbers = getPrimeNumbers(closingRange);
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int item: primeNumbers) {
+                if(openingRange<=item) stringBuilder.append(item + "\n");
+            }
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter15.p4134();
+            Chapter15.p1929();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
