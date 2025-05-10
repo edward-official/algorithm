@@ -163,11 +163,30 @@ public class Main {
             out.write(stringBuilder.toString());
             out.flush();
         }
+        static int chebyshev(int n) {
+            ArrayList<Integer> primeNumbers = getPrimeNumbers(2*n);
+            int count = 0;
+            for(int index=0; index<primeNumbers.size(); index++) {
+                if(n<primeNumbers.get(index) && primeNumbers.get(index)<=2*n) count++;
+                else if(2*n<primeNumbers.get(index)) break;
+            }
+            return count;
+        }
+        static void p4948() throws IOException {
+            StringBuilder stringBuilder = new StringBuilder();
+            while(true) {
+                int target = Integer.parseInt(in.readLine());
+                if(target<=0) break;
+                stringBuilder.append(chebyshev(target) + "\n");
+            }
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter15.p1929();
+            Chapter15.p4948();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
