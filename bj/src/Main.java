@@ -246,11 +246,38 @@ public class Main {
             out.write(stringBuilder.toString());
             out.flush();
         }
+        static void p24511() throws IOException {
+            final int numberOfStages = Integer.parseInt(in.readLine());
+
+            int[] typeOfStages = new int[numberOfStages];
+            StringTokenizer tokenizer = new StringTokenizer(in.readLine());
+            for(int index=0; index<numberOfStages; index++) typeOfStages[index]=Integer.parseInt(tokenizer.nextToken());
+
+            ArrayDeque<Integer> mutatedList = new ArrayDeque<>();
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=0; index<numberOfStages; index++) {
+                int element = Integer.parseInt(tokenizer.nextToken());
+                if(typeOfStages[index]==0) mutatedList.addFirst(element);
+            }
+
+            final int numberOfInputs = Integer.parseInt(in.readLine());
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int n=0; n<numberOfInputs; n++) {
+                int input = Integer.parseInt(tokenizer.nextToken());
+                mutatedList.addLast(input);
+                int poppedElement = mutatedList.pop();
+                stringBuilder.append(poppedElement).append(" ");
+//                stringBuilder.append(String.format("%d ", poppedElement));
+            }
+
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter16.p2346();
+            Chapter16.p24511();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
