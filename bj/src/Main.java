@@ -121,11 +121,136 @@ public class Main {
             else out.write("Sad\n");
             out.flush();
         }
+        static void p18258() throws IOException {
+            final int numberOfLines = Integer.parseInt(in.readLine());
+            LinkedList<Integer> queue = new LinkedList<>();
+            StringTokenizer tokenizer;
+            for(int n=0; n<numberOfLines; n++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                String operation = tokenizer.nextToken();
+                if(operation.equals("push")) {
+                    queue.add(Integer.parseInt(tokenizer.nextToken()));
+                }
+                else if(operation.equals("pop")) {
+                    if(queue.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(queue.poll() + "\n");
+                }
+                else if(operation.equals("size")) {
+                    stringBuilder.append(queue.size() + "\n");
+                }
+                else if(operation.equals("empty")) {
+                    if(queue.isEmpty()) stringBuilder.append("1\n");
+                    else stringBuilder.append("0\n");
+                }
+                else if(operation.equals("front")) {
+                    if(queue.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(queue.peekFirst() + "\n");
+                }
+                else if(operation.equals("back")) {
+                    if(queue.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(queue.peekLast() + "\n");
+                }
+            }
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
+        static void p2164() throws IOException {
+            final int numberOfCards = Integer.parseInt(in.readLine());
+            ArrayDeque<Integer> queue = new ArrayDeque<>();
+            for(int element=1; element<=numberOfCards; element++) queue.add(element);
+            while(queue.size()>1) {
+                queue.poll();
+                if(queue.size()==1) break;
+                queue.add(queue.poll());
+            }
+            out.write(queue.element() + "\n");
+            out.flush();
+        }
+        static void p11866() throws IOException {
+            StringTokenizer tokenizer = new StringTokenizer(in.readLine());
+            final int numberOfPeople = Integer.parseInt(tokenizer.nextToken());
+            final int increment = Integer.parseInt(tokenizer.nextToken());
+            LinkedList<Integer> queue = new LinkedList<>();
+            for(int n=1; n<=numberOfPeople; n++) queue.add(n);
+
+            int pollingIndex = increment-1;
+            stringBuilder.append("<" + queue.remove(pollingIndex));
+            while(!queue.isEmpty()) {
+                pollingIndex = (pollingIndex+increment-1) % queue.size();
+                stringBuilder.append(", " + queue.remove(pollingIndex));
+            }
+            stringBuilder.append(">\n");
+
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
+        static void p28279() throws IOException {
+            final int numberOfInstructions = Integer.parseInt(in.readLine());
+            StringTokenizer tokenizer;
+            ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
+            for(int n=0; n<numberOfInstructions; n++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                int instruction = Integer.parseInt(tokenizer.nextToken());
+                if(instruction==1) arrayDeque.addFirst(Integer.parseInt(tokenizer.nextToken()));
+                else if(instruction==2) arrayDeque.addLast(Integer.parseInt(tokenizer.nextToken()));
+                else if(instruction==3) {
+                    if(arrayDeque.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(arrayDeque.pollFirst() + "\n");
+                }
+                else if(instruction==4) {
+                    if(arrayDeque.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(arrayDeque.pollLast() + "\n");
+                }
+                else if(instruction==5) stringBuilder.append(arrayDeque.size() + "\n");
+                else if(instruction==6) {
+                    if(arrayDeque.isEmpty()) stringBuilder.append("1\n");
+                    else stringBuilder.append("0\n");
+                }
+                else if(instruction==7) {
+                    if(arrayDeque.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(arrayDeque.peekFirst() + "\n");
+                }
+                else if(instruction==8) {
+                    if(arrayDeque.isEmpty()) stringBuilder.append("-1\n");
+                    else stringBuilder.append(arrayDeque.peekLast() + "\n");
+                }
+            }
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
+        static class Balloon {
+            int index;
+            int increment;
+            Balloon(int index, int increment) {
+                this.index = index;
+                this.increment = increment;
+            }
+        }
+        static void p2346() throws IOException {
+            final int numberOfBalloons = Integer.parseInt(in.readLine());
+            StringTokenizer tokenizer = new StringTokenizer(in.readLine());
+            LinkedList<Balloon> balloons = new LinkedList<>();
+
+            for(int index=1; index<=numberOfBalloons; index++) balloons.add(new Balloon(index, Integer.parseInt(tokenizer.nextToken())));
+            int removingIndex=0, increment;
+            while(!balloons.isEmpty()) {
+                Balloon temp = balloons.remove(removingIndex);
+                increment = temp.increment;
+                stringBuilder.append(String.format("%d ", temp.index));
+                if(balloons.isEmpty()) break;
+                if(increment>0) removingIndex = (removingIndex+increment-1) % balloons.size();
+                else removingIndex = (removingIndex+increment) % balloons.size();
+                if(removingIndex<0) removingIndex+=balloons.size();
+            }
+
+            out.write(stringBuilder.toString());
+            out.flush();
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter16.p12789();
+            Chapter16.p2346();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
