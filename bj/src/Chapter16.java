@@ -227,12 +227,12 @@ public class Chapter16 {
     static void p2346() throws IOException {
         final int numberOfBalloons = Integer.parseInt(in.readLine());
         StringTokenizer tokenizer = new StringTokenizer(in.readLine());
-        LinkedList<Main.Chapter16.Balloon> balloons = new LinkedList<>();
+        LinkedList<Balloon> balloons = new LinkedList<>();
 
-        for(int index=1; index<=numberOfBalloons; index++) balloons.add(new Main.Chapter16.Balloon(index, Integer.parseInt(tokenizer.nextToken())));
+        for(int index=1; index<=numberOfBalloons; index++) balloons.add(new Balloon(index, Integer.parseInt(tokenizer.nextToken())));
         int removingIndex=0, increment;
         while(!balloons.isEmpty()) {
-            Main.Chapter16.Balloon temp = balloons.remove(removingIndex);
+            Balloon temp = balloons.remove(removingIndex);
             increment = temp.increment;
             stringBuilder.append(String.format("%d ", temp.index));
             if(balloons.isEmpty()) break;
