@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         try {
-            Chapter18.p20920();
+            Chapter19.p11729();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
