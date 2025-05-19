@@ -110,7 +110,7 @@ public class Chapter19 {
         ArrayList<Integer> elements = new ArrayList<>();
         for(int index=0; index<sizeOfArray; index++) elements.add(Integer.parseInt(tokenizer.nextToken()));
 
-        Main.Chapter19.TeachingAssistant teachingAssistant = new Main.Chapter19.TeachingAssistant(targetSequence, elements);
+        TeachingAssistant teachingAssistant = new TeachingAssistant(targetSequence, elements);
         teachingAssistant.sort(0,elements.size()-1);
         stringBuilder.append(teachingAssistant.targetElement);
 
@@ -147,13 +147,13 @@ public class Chapter19 {
     }
     static void p4779() throws IOException {
         int exponent;
-        Main.Chapter19.Cantor cantor;
+        Cantor cantor;
         String result;
         while(true) {
             String read = in.readLine();
             if(read==null) break;
             exponent = Integer.parseInt(read);
-            cantor = new Main.Chapter19.Cantor(exponent);
+            cantor = new Cantor(exponent);
             cantor.process(0, cantor.numberOfElements-1);
             result = cantor.elementAsString();
             stringBuilder.append(result).append("\n");
