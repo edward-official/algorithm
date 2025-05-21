@@ -255,11 +255,84 @@ public class Main {
                 out.flush();
             }
         }
+        static class P14888 {
+            private static int numberOfElements;
+            private static int[] elements;
+            private static int numberOfOperators;
+            private static char[] operators;
+            private static char[] operatorsInSequence;
+            private static boolean[] isOperatorUsed;
+            private static int max, min;
+            private static boolean isFirstResult = true;
+
+            private static int calculate() {
+                int result = elements[0];
+                for(int indexForOperatorInSequence=0; indexForOperatorInSequence<numberOfOperators; indexForOperatorInSequence++) {
+                    if(operatorsInSequence[indexForOperatorInSequence]=='+') result+=elements[indexForOperatorInSequence+1];
+                    else if(operatorsInSequence[indexForOperatorInSequence]=='-') result-=elements[indexForOperatorInSequence+1];
+                    else if(operatorsInSequence[indexForOperatorInSequence]=='*') result*=elements[indexForOperatorInSequence+1];
+                    else if(operatorsInSequence[indexForOperatorInSequence]=='/') result/=elements[indexForOperatorInSequence+1];
+                }
+                return result;
+            }
+            private static void recursive(int sequence) {
+                if(sequence==numberOfOperators) {
+                    int result = calculate();
+                    if(isFirstResult) {
+                        max = result;
+                        min = result;
+                        isFirstResult = false;
+                    }
+                    else {
+                        if(max<result) max=result;
+                        else if(result<min) min=result;
+                    }
+                }
+                for(int index=0; index<numberOfOperators; index++) {
+                    if(!isOperatorUsed[index]) {
+                        operatorsInSequence[sequence] = operators[index];
+                        isOperatorUsed[index] = true;
+                        recursive(sequence+1);
+                        isOperatorUsed[index] = false;
+                    }
+                }
+            }
+            static void run() throws IOException {
+                numberOfElements = Integer.parseInt(in.readLine());
+                elements = new int[numberOfElements];
+                numberOfOperators = numberOfElements-1;
+                operators = new char[numberOfOperators];
+                operatorsInSequence = new char[numberOfOperators];
+                isOperatorUsed = new boolean[numberOfOperators];
+
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int index=0; index<numberOfElements; index++) {
+                    elements[index] = Integer.parseInt(tokenizer.nextToken());
+                }
+                tokenizer = new StringTokenizer(in.readLine());
+                int indexForOperators = 0;
+                for(int typeOfOperator=0; typeOfOperator<4; typeOfOperator++) {
+                    char opeator;
+                    if(typeOfOperator==0) opeator='+';
+                    else if(typeOfOperator==1) opeator='-';
+                    else if(typeOfOperator==2) opeator='*';
+                    else opeator='/';
+                    int closingRepetition = Integer.parseInt(tokenizer.nextToken());
+                    for(int n=0; n<closingRepetition; n++) operators[indexForOperators++]=opeator;
+                }
+
+                recursive(0);
+                builder.append(max).append("\n");
+                builder.append(min).append("\n");
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter20.P2580.run();
+            Chapter20.P14888.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
