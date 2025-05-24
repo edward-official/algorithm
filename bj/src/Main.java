@@ -134,11 +134,42 @@ public class Main {
                 out.flush();
             }
         }
+        static class P1912 {
+            private static int[] elements;
+            private static int capacity;
+            private static int max;
+            private static int[] memoization;
+
+            static void dp() {
+                int candidate;
+                for(int closingIndex=1; closingIndex<capacity; closingIndex++) {
+                    candidate = memoization[closingIndex-1] + elements[closingIndex];
+                    if(candidate < elements[closingIndex]) memoization[closingIndex] = elements[closingIndex];
+                    else memoization[closingIndex] = candidate;
+                    if(max < memoization[closingIndex]) max = memoization[closingIndex];
+                }
+            }
+            static void run() throws IOException {
+                capacity = Integer.parseInt(in.readLine());
+                elements = new int[capacity];
+                memoization = new int[capacity];
+
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int index=0; index<capacity; index++) elements[index] = Integer.parseInt(tokenizer.nextToken());
+                max = elements[0];
+                memoization[0] = elements[0];
+                dp();
+
+                builder.append(max);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P9461.run();
+            Chapter21.P1912.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
