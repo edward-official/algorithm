@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.*;
+import java.lang.annotation.Target;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -287,11 +288,113 @@ public class Main {
                 out.flush();
             }
         }
+        static class P1463 {
+            private static int target;
+            private static int[] memoization;
+
+            private static int selectMin(int c1, int c2, int c3) {
+                if(c1<=c2 && c1<=c3) return c1;
+                else if(c2<=c1 && c2<=c3) return c2;
+                else return c3;
+            }
+            private static void dp() {
+                for(int item=4; item<=target; item++) {
+                    int c1 = 1 + item%3 + memoization[item/3];
+                    int c2 = 1 + item%2 + memoization[item/2];
+                    int c3 = 1 + memoization[item-1];
+                    memoization[item] = selectMin(c1,c2,c3);
+                }
+            }
+            static void run() throws IOException {
+                target = Integer.parseInt(in.readLine());
+                if(target==1) builder.append(0);
+                else if(target==2) builder.append(1);
+                else if(target==3) builder.append(1);
+                else {
+                    memoization = new int[target+1];
+                    memoization[1] = 0;
+                    memoization[2] = 1;
+                    memoization[3] = 1;
+                    dp();
+                    builder.append(memoization[target]);
+                }
+
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P10844 {
+            private static long[][] memoization;
+            private static int length;
+            private final static int numberOfItems = 10;
+            private static long divider = 1000000000;
+
+            static void run() throws IOException {
+                length = Integer.parseInt(in.readLine());
+                memoization = new long[length][numberOfItems];
+
+                for(int index=1; index<numberOfItems; index++) memoization[0][index] = 1;
+                for(int index1=1; index1<length; index1++) {
+                    memoization[index1][0] = memoization[index1-1][1];
+                    for(int index2=1; index2<numberOfItems-1; index2++) memoization[index1][index2] = (memoization[index1-1][index2-1] + memoization[index1-1][index2+1]) % divider;
+                    memoization[index1][numberOfItems-1] = memoization[index1-1][numberOfItems-2];
+                }
+
+                long count = 0;
+                for(int index=0; index<numberOfItems; index++) count = (count + memoization[length-1][index]) % divider;
+
+                builder.append(count);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P2156 {
+            private static int size;
+            private static int[] elements;
+            private static int[] memoization;
+
+            static void run() throws IOException {
+                size = Integer.parseInt(in.readLine());
+                elements = new int[size];
+                memoization = new int[size];
+
+                for(int index=0; index<size; index++) {
+                    elements[index] = Integer.parseInt(in.readLine());
+                }
+                if(size==1) {
+                    builder.append(elements[0]);
+                }
+                else if(size==2) {
+                    builder.append(elements[0] + elements[1]);
+                }
+                else {
+                    memoization[0] = elements[0];
+                    memoization[1] = elements[0] + elements[1];
+                    if(elements[0]<elements[1] && elements[0]<elements[2]) memoization[2] = elements[1]+elements[2];
+                    else if(elements[1]<elements[0] && elements[1]<elements[2]) memoization[2] = elements[0]+elements[2];
+                    else memoization[2] = elements[0]+elements[1];
+
+                    for(int index=3; index<size; index++) {
+                        int c1 = memoization[index-3] + elements[index-1] + elements[index];
+                        int c2 = memoization[index-2] + elements[index];
+                        int c3 = memoization[index-1];
+
+                        if(c2<=c1 && c3<=c1) memoization[index] = c1;
+                        else if(c1<=c2 && c3<=c2) memoization[index] = c2;
+                        else memoization[index] = c3;
+                    }
+                    builder.append(memoization[size-1]);
+                }
+
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P2579.run();
+            Chapter21.P2156.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
