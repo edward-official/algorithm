@@ -165,11 +165,133 @@ public class Main {
                 out.flush();
             }
         }
+        static class P1149 {
+            private static final int numberOfColors = 3;
+            private static int numberOfHouses;
+            private static int[][] expences;
+            private static int[][] memoization;
+
+            static void run() throws IOException {
+                numberOfHouses = Integer.parseInt(in.readLine());
+                expences = new int[numberOfHouses][numberOfColors];
+                memoization = new int[numberOfHouses][numberOfColors];
+
+                for(int indexOfHouse=0; indexOfHouse<numberOfHouses; indexOfHouse++) {
+                    tokenizer = new StringTokenizer(in.readLine());
+                    for(int indexOfColor=0; indexOfColor<numberOfColors; indexOfColor++) {
+                        expences[indexOfHouse][indexOfColor] = Integer.parseInt(tokenizer.nextToken());
+                    }
+                }
+                for(int indexForColor=0; indexForColor<numberOfColors; indexForColor++) {
+                    memoization[0][indexForColor] = expences[0][indexForColor];
+                }
+
+                for(int index=1; index<numberOfHouses; index++) {
+                    for(int color=0; color<numberOfColors; color++) {
+                        memoization[index][color] = expences[index][color];
+                        if(memoization[index-1][(color+1) % numberOfColors] < memoization[index-1][(color+2) % numberOfColors]) memoization[index][color] += memoization[index-1][(color+1) % numberOfColors];
+                        else memoization[index][color] += memoization[index-1][(color+2) % numberOfColors];
+                    }
+                }
+                int min = memoization[numberOfHouses-1][0];
+                for(int color=1; color<=2; color++) {
+                    if(memoization[numberOfHouses-1][color]<min) min = memoization[numberOfHouses-1][color];
+                }
+
+                builder.append(min);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P1932 {
+            private static int height;
+            private static int numberOfElements;
+            private static int[] costs;
+            private static int[] memoization;
+
+            static void run() throws IOException {
+                height = Integer.parseInt(in.readLine());
+                numberOfElements = height * (height+1) / 2;
+                costs = new int[numberOfElements];
+                memoization = new int[numberOfElements];
+
+                int indexForInput = 0;
+                for(int sizeOfInput=1; sizeOfInput<=height; sizeOfInput++) {
+                    tokenizer = new StringTokenizer(in.readLine());
+                    for(int n=0; n<sizeOfInput; n++) costs[indexForInput++] = Integer.parseInt(tokenizer.nextToken());
+                }
+
+                /*
+                0
+                12
+                345
+                6789
+                 */
+                memoization[0] = costs[0];
+                int startingIndex = 0;
+                for(int sizeOfLevel=1; sizeOfLevel<height; sizeOfLevel++) {
+                    memoization[startingIndex+sizeOfLevel] = memoization[startingIndex] + costs[startingIndex+sizeOfLevel];
+                    for(int index=startingIndex; index<startingIndex+sizeOfLevel; index++) memoization[index+sizeOfLevel+1] = memoization[index] + costs[index+sizeOfLevel+1];
+                    for(int index=startingIndex; index<startingIndex+sizeOfLevel; index++) {
+                        int temp = memoization[index] + costs[index+sizeOfLevel];
+                        if(memoization[index+sizeOfLevel]<temp) memoization[index+sizeOfLevel]=temp;
+                    }
+                    startingIndex += sizeOfLevel;
+                }
+
+                int max = memoization[startingIndex];
+                for(int index=startingIndex; index<startingIndex+height; index++) if(max<memoization[index]) max = memoization[index];
+
+                builder.append(max);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P2579 {
+            private static int[] points;
+            private static int[] memoization;
+            private static int size;
+
+            private static int dp() {
+                if(size==1) return points[0];
+                else if(size==2) return points[0] + points[1];
+
+                /*
+                there can't be two skips in a row
+                two skips should have one or two steps in between them
+
+                ___O
+                OXOO: memoization[n-3] + points[n-1] + points[n]
+                _OXO: memoization[n-2] + points[n]
+                 */
+                memoization[0] = points[0];
+                memoization[1] = points[0] + points[1];
+                if(points[0]<points[1]) memoization[2] = points[1] + points[2];
+                else memoization[2] = points[0] + points[2];
+                for(int index=3; index<size; index++) {
+                    int value1 = memoization[index-3] + points[index-1] + points[index];
+                    int value2 = memoization[index-2] + points[index];
+                    if(value1<value2) memoization[index] = value2;
+                    else memoization[index] = value1;
+                }
+                return memoization[size-1];
+            }
+            static void run() throws IOException {
+                size = Integer.parseInt(in.readLine());
+                points = new int[size];
+                memoization = new int[size];
+                for(int index=0; index<size; index++) points[index] = Integer.parseInt(in.readLine());
+
+                builder.append(dp());
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P1912.run();
+            Chapter21.P2579.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
