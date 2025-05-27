@@ -361,29 +361,38 @@ public class Main {
                 for(int index=0; index<size; index++) {
                     elements[index] = Integer.parseInt(in.readLine());
                 }
-                if(size==1) {
-                    builder.append(elements[0]);
-                }
-                else if(size==2) {
-                    builder.append(elements[0] + elements[1]);
-                }
+                if(size==1) builder.append(elements[0]);
+                else if(size==2) builder.append(elements[0] + elements[1]);
+                else if(size==3) builder.append(Math.max(elements[0] + elements[1],Math.max(elements[1]+elements[2],elements[0]+elements[2])));
                 else {
                     memoization[0] = elements[0];
                     memoization[1] = elements[0] + elements[1];
-                    if(elements[0]<elements[1] && elements[0]<elements[2]) memoization[2] = elements[1]+elements[2];
-                    else if(elements[1]<elements[0] && elements[1]<elements[2]) memoization[2] = elements[0]+elements[2];
-                    else memoization[2] = elements[0]+elements[1];
+                    memoization[2] = Math.max(elements[1]+elements[2],elements[0]+elements[2]);
+                    memoization[3] = Math.max(elements[0]+elements[1]+elements[3],elements[0]+elements[2]+elements[3]);
+                    /*
+                    [OXOO]
+                    [OOXO]
+                     */
 
-                    for(int index=3; index<size; index++) {
-                        int c1 = memoization[index-3] + elements[index-1] + elements[index];
-                        int c2 = memoization[index-2] + elements[index];
-                        int c3 = memoization[index-1];
+                    int max = Math.max(memoization[2],memoization[3]);
+                    for(int index=4; index<size; index++) {
+                        /*
+                        [____O]
+                        [OXXOO]
+                        [_OXOO]
+                        [_OXXO]
+                        [__OXO]
+                         */
+                        int c1 = memoization[index-4] + elements[index-1] + elements[index];
+                        int c2 = memoization[index-3] + elements[index-1] + elements[index];
+                        int c3 = memoization[index-3] + elements[index];
+                        int c4 = memoization[index-2] + elements[index];
 
-                        if(c2<=c1 && c3<=c1) memoization[index] = c1;
-                        else if(c1<=c2 && c3<=c2) memoization[index] = c2;
-                        else memoization[index] = c3;
+                        memoization[index] = Math.max(Math.max(Math.max(c1,c2),c3),c4);
+                        if(max<memoization[index]) max = memoization[index];
+//                        System.err.println(String.format("selected: memoization[%d] = %d (%d,%d,%d,%d)",index,memoization[index],c1,c2,c3,c4));
                     }
-                    builder.append(memoization[size-1]);
+                    builder.append(max);
                 }
 
                 out.write(builder.toString());
