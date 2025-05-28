@@ -399,11 +399,55 @@ public class Main {
                 out.flush();
             }
         }
+        static class P11053 {
+            private static int size;
+            private static int[] elements;
+            private static HashMap<Integer,Integer> memoization = new HashMap<>();
+            /*
+            how to solve the problem of finding longest increasing subset
+            we have several options for selecting first element
+            how to determine the longest length of sequence when the first element is decided?
+            this means that choosing the second element is not that simple
+            1 5 2 3 4 100 | 6 7 8 9 10
+            1 5 2 3 4 100 | 6 7 8 9 10
+             */
+
+
+            private static int recursive(int index) {
+                int longest = 0;
+                if(memoization.containsKey(index)) return memoization.get(index);
+                for(int nextIndex=index+1; nextIndex<size; nextIndex++) {
+                    if(elements[index]<elements[nextIndex]) {
+                        int temp = 1 + recursive(nextIndex);
+                        if(longest<temp) longest = temp;
+                    }
+                }
+                memoization.put(index,longest);
+                return longest;
+            }
+            static void run() throws IOException {
+                size = Integer.parseInt(in.readLine());
+                elements = new int[size];
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int index=0; index<size; index++) elements[index] = Integer.parseInt(tokenizer.nextToken());
+
+                int longest = 0;
+                for(int firstIndex=0; firstIndex<size; firstIndex++) {
+                    if(longest>size-firstIndex) break;
+                    int temp = recursive(firstIndex) + 1;
+                    if(longest<temp) longest=temp;
+                }
+
+                builder.append(longest);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P2156.run();
+            Chapter21.P11053.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
