@@ -443,11 +443,62 @@ public class Main {
                 out.flush();
             }
         }
+        static class P11054 {
+            private static int size;
+            private static int[] elements;
+            private static int[] memo1;//increasing
+            private static int[] memo2;//decreasing
+
+            private static void dp() {
+                for(int closingIndex=1; closingIndex<size; closingIndex++) {
+                    int longest1 = 1;
+                    for(int index=0; index<closingIndex; index++) {
+                        if(elements[index]<elements[closingIndex]) {
+                            int temp = memo1[index] + 1;
+                            if(longest1<temp) longest1=temp;
+                        }
+                    }
+                    memo1[closingIndex] = longest1;
+                }
+                for(int openingIndex=size-2; openingIndex>=0; openingIndex--) {
+                    int longest2 = 1;
+                    for(int index=size-1; index>openingIndex; index--) {
+                        if(elements[openingIndex]>elements[index]) {
+                            int temp = memo2[index] + 1;
+                            if(longest2<temp) longest2=temp;
+                        }
+                    }
+                    memo2[openingIndex] = longest2;
+                }
+            }
+            static void run() throws IOException {
+                size = Integer.parseInt(in.readLine());
+                elements = new int[size];
+                memo1 = new int[size];
+                memo1[0] = 1;
+                memo2 = new int[size];
+                memo2[size-1] = 1;
+
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int index=0; index<size; index++) elements[index] = Integer.parseInt(tokenizer.nextToken());
+
+                dp();
+                int longest = memo1[0]+memo2[0]-1;
+                for(int index=1; index<size; index++) {
+                    int temp = memo1[index]+memo2[index]-1;
+                    if(longest<temp) longest=temp;
+                }
+
+                builder.append(longest);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P11053.run();
+            Chapter21.P11054.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
