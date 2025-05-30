@@ -404,9 +404,9 @@ public class Main {
             private static int[] elements;
             private static HashMap<Integer,Integer> memoization = new HashMap<>();
             /*
-            how to solve the problem of finding longest increasing subset
+            how to solve the problem of finding recordOfLongest increasing subset
             we have several options for selecting first element
-            how to determine the longest length of sequence when the first element is decided?
+            how to determine the recordOfLongest length of sequence when the first element is decided?
             this means that choosing the second element is not that simple
             1 5 2 3 4 100 | 6 7 8 9 10
             1 5 2 3 4 100 | 6 7 8 9 10
@@ -414,16 +414,16 @@ public class Main {
 
 
             private static int recursive(int index) {
-                int longest = 0;
+                int recordOfLongest = 0;
                 if(memoization.containsKey(index)) return memoization.get(index);
                 for(int nextIndex=index+1; nextIndex<size; nextIndex++) {
                     if(elements[index]<elements[nextIndex]) {
                         int temp = 1 + recursive(nextIndex);
-                        if(longest<temp) longest = temp;
+                        if(recordOfLongest<temp) recordOfLongest = temp;
                     }
                 }
-                memoization.put(index,longest);
-                return longest;
+                memoization.put(index,recordOfLongest);
+                return recordOfLongest;
             }
             static void run() throws IOException {
                 size = Integer.parseInt(in.readLine());
@@ -431,14 +431,14 @@ public class Main {
                 tokenizer = new StringTokenizer(in.readLine());
                 for(int index=0; index<size; index++) elements[index] = Integer.parseInt(tokenizer.nextToken());
 
-                int longest = 0;
+                int recordOfLongest = 0;
                 for(int firstIndex=0; firstIndex<size; firstIndex++) {
-                    if(longest>size-firstIndex) break;
+                    if(recordOfLongest>size-firstIndex) break;
                     int temp = recursive(firstIndex) + 1;
-                    if(longest<temp) longest=temp;
+                    if(recordOfLongest<temp) recordOfLongest=temp;
                 }
 
-                builder.append(longest);
+                builder.append(recordOfLongest);
                 out.write(builder.toString());
                 out.flush();
             }
@@ -451,24 +451,24 @@ public class Main {
 
             private static void dp() {
                 for(int closingIndex=1; closingIndex<size; closingIndex++) {
-                    int longest1 = 1;
+                    int recordLongest1 = 1;
                     for(int index=0; index<closingIndex; index++) {
                         if(elements[index]<elements[closingIndex]) {
                             int temp = memo1[index] + 1;
-                            if(longest1<temp) longest1=temp;
+                            if(recordLongest1<temp) recordLongest1=temp;
                         }
                     }
-                    memo1[closingIndex] = longest1;
+                    memo1[closingIndex] = recordLongest1;
                 }
                 for(int openingIndex=size-2; openingIndex>=0; openingIndex--) {
-                    int longest2 = 1;
+                    int recordLongest2 = 1;
                     for(int index=size-1; index>openingIndex; index--) {
                         if(elements[openingIndex]>elements[index]) {
                             int temp = memo2[index] + 1;
-                            if(longest2<temp) longest2=temp;
+                            if(recordLongest2<temp) recordLongest2=temp;
                         }
                     }
-                    memo2[openingIndex] = longest2;
+                    memo2[openingIndex] = recordLongest2;
                 }
             }
             static void run() throws IOException {
@@ -483,13 +483,109 @@ public class Main {
                 for(int index=0; index<size; index++) elements[index] = Integer.parseInt(tokenizer.nextToken());
 
                 dp();
-                int longest = memo1[0]+memo2[0]-1;
+                int recordOfLongest = memo1[0]+memo2[0]-1;
                 for(int index=1; index<size; index++) {
                     int temp = memo1[index]+memo2[index]-1;
-                    if(longest<temp) longest=temp;
+                    if(recordOfLongest<temp) recordOfLongest=temp;
                 }
 
-                builder.append(longest);
+                builder.append(recordOfLongest);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P2565 {
+            private static int size;
+            private static int[] telegraph1;
+            private static int[] telegraph2;
+            private static int[] recordOfLongest;
+            private static int finalLongestLength = -1;
+
+            private static void merge(int openingIndex, int closingIndex) {
+                int centerIndex = (openingIndex+closingIndex)/2;
+                int index1=openingIndex, index2=centerIndex+1;
+
+                int[] temp1 = new int[closingIndex-openingIndex+1];
+                int[] temp2 = new int[closingIndex-openingIndex+1];
+                int indexForTemp = 0;
+
+                while(index1<=centerIndex && index2<=closingIndex) {
+                    if(telegraph1[index1]<telegraph1[index2]) {
+                        temp1[indexForTemp]=telegraph1[index1];
+                        temp2[indexForTemp]=telegraph2[index1];
+                        indexForTemp++;
+                        index1++;
+                    }
+                    else {
+                        temp1[indexForTemp]=telegraph1[index2];
+                        temp2[indexForTemp]=telegraph2[index2];
+                        indexForTemp++;
+                        index2++;
+                    }
+                }
+                while(index1<=centerIndex) {
+                    temp1[indexForTemp]=telegraph1[index1];
+                    temp2[indexForTemp]=telegraph2[index1];
+                    indexForTemp++;
+                    index1++;
+                }
+                while(index2<=closingIndex) {
+                    temp1[indexForTemp]=telegraph1[index2];
+                    temp2[indexForTemp]=telegraph2[index2];
+                    indexForTemp++;
+                    index2++;
+                }
+                for(int offset=0; offset<=closingIndex-openingIndex; offset++) {
+                    telegraph1[openingIndex+offset] = temp1[offset];
+                    telegraph2[openingIndex+offset] = temp2[offset];
+                }
+            }
+            private static void sort(int openingIndex, int closingIndex) {
+                if(openingIndex>=closingIndex) return;
+                int centerIndex = (openingIndex+closingIndex)/2;
+                sort(openingIndex,centerIndex);
+                sort(centerIndex+1,closingIndex);
+                merge(openingIndex,closingIndex);
+            }
+            private static void updateRecordOfLongest(int range) {
+//                System.err.println(String.format("\nEntered method of range %d", range));
+                int max = 1;
+                for(int index=0; index<range; index++) {
+                    if(telegraph2[index] < telegraph2[range]) {
+                        int temp = recordOfLongest[index] + 1;
+                        if(max<temp) {
+                            max = temp;
+                            if(finalLongestLength<max) finalLongestLength = max;
+                        }
+                    }
+                }
+                recordOfLongest[range] = max;
+//                System.err.println(Arrays.toString(telegraph2));
+//                System.err.println(Arrays.toString(recordOfLongest));
+            }
+            static void run() throws IOException {
+                size = Integer.parseInt(in.readLine());
+                telegraph1 = new int[size];
+                telegraph2 = new int[size];
+                recordOfLongest = new int[size];
+
+                for(int index=0; index<size; index++) {
+                    tokenizer = new StringTokenizer(in.readLine());
+                    int from = Integer.parseInt(tokenizer.nextToken());
+                    int to = Integer.parseInt(tokenizer.nextToken());
+                    telegraph1[index] = from;
+                    telegraph2[index] = to;
+                }
+
+                sort(0,size-1);
+                recordOfLongest[0] = 1;
+                for(int range=1; range<size; range++) updateRecordOfLongest(range);
+
+//                System.err.println("\nafter sorting");
+//                System.err.println(Arrays.toString(telegraph1));
+//                System.err.println(Arrays.toString(telegraph2));
+
+                builder.append(size-finalLongestLength);
                 out.write(builder.toString());
                 out.flush();
             }
@@ -498,7 +594,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Chapter21.P11054.run();
+            Chapter21.P2565.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
