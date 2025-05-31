@@ -590,11 +590,38 @@ public class Main {
                 out.flush();
             }
         }
+        static class P9251 {
+            private static String element1;
+            private static String element2;
+            private static int size1;
+            private static int size2;
+            private static int[][] dp;
+
+
+            static void run() throws IOException {
+                element1 = in.readLine();
+                size1 = element1.length();
+                element2 = in.readLine();
+                size2 = element2.length();
+                dp = new int[size1+1][size2+1];
+
+                for(int i=1; i<=size1; i++) {
+                    for(int j=1; j<=size2; j++) {
+                        if(element1.charAt(i-1)==element2.charAt(j-1)) dp[i][j] = dp[i-1][j-1] + 1;
+                        else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                    }
+                }
+
+                builder.append(dp[size1][size2]);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P2565.run();
+            Chapter21.P9251.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
