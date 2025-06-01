@@ -617,11 +617,47 @@ public class Main {
                 out.flush();
             }
         }
+        static class P12865 {
+            private static int limitOfWeight;
+            private static int numberOfElements;
+            private static int[] weights;
+            private static int[] values;
+            private static int[][] dp;
+
+            static void run() throws IOException {
+                tokenizer = new StringTokenizer(in.readLine());
+                numberOfElements = Integer.parseInt(tokenizer.nextToken());
+                limitOfWeight = Integer.parseInt(tokenizer.nextToken());
+                weights = new int[numberOfElements+1];
+                values = new int[numberOfElements+1];
+                dp = new int[numberOfElements+1][limitOfWeight+1];
+
+                for(int index=1; index<=numberOfElements; index++) {
+                    tokenizer = new StringTokenizer(in.readLine());
+                    weights[index] = Integer.parseInt(tokenizer.nextToken());
+                    values[index] = Integer.parseInt(tokenizer.nextToken());
+                }
+                for(int targetIndex=1; targetIndex<=numberOfElements; targetIndex++) {
+                    for(int weight=1; weight<=limitOfWeight; weight++) {
+                        if(weights[targetIndex]>weight) dp[targetIndex][weight] = dp[targetIndex-1][weight];
+                        else {
+                            int c1 = dp[targetIndex-1][weight];
+                            int c2 = dp[targetIndex-1][weight-weights[targetIndex]] + values[targetIndex];
+                            dp[targetIndex][weight] = Math.max(c1,c2);
+                        }
+                    }
+                }
+
+                builder.append(dp[numberOfElements][limitOfWeight]);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter21.P9251.run();
+            Chapter21.P12865.run();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
