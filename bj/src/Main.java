@@ -47,11 +47,75 @@ public class Main {
                 out.flush();
             }
         }
+        static class P2559 {
+            private static int quantity;
+            private static int streak;
+            private static int[] elements;
+
+            static void execute() throws IOException {
+                tokenizer = new StringTokenizer(in.readLine());
+                quantity = Integer.parseInt(tokenizer.nextToken());
+                streak = Integer.parseInt(tokenizer.nextToken());
+                elements = new int[quantity];
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int index=0; index<quantity; index++) elements[index]=Integer.parseInt(tokenizer.nextToken());
+
+                int answer = 0;
+                for(int index=0; index<streak; index++) answer+=elements[index];
+                for(int startingIndex=1; startingIndex<=quantity-streak; startingIndex++) {
+                    int temp = 0;
+                    for(int offset=0; offset<streak; offset++) temp+=elements[startingIndex+offset];
+                    if(answer<temp) answer=temp;
+                }
+
+                builder.append(answer);
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P16139 {
+            private static String element;
+            private static int numberOfLoops;
+            private static HashMap<Character, int[]> record = new HashMap<>();
+
+            static int process() throws IOException {
+                tokenizer = new StringTokenizer(in.readLine());
+                char target = tokenizer.nextToken().charAt(0);
+                int from = Integer.parseInt(tokenizer.nextToken());
+                int to = Integer.parseInt(tokenizer.nextToken());
+
+                if(record.containsKey(target)) {
+                    int count = record.get(target)[to]-record.get(target)[from];
+                    if(target==element.charAt(from)) count+=1;
+                    return count;
+                }
+
+                int[] counts = new int[element.length()];
+                if(element.charAt(0)==target) counts[0]=1;
+                else counts[0]=0;
+                for(int index=1; index<element.length(); index++) {
+                    if(element.charAt(index)==target) counts[index]=counts[index-1]+1;
+                    else counts[index]=counts[index-1];
+                }
+                record.put(target,counts);
+
+                int count = counts[to]-counts[from];
+                if(target==element.charAt(from)) count+=1;
+                return count;
+            }
+            static void execute() throws IOException {
+                element = in.readLine();
+                numberOfLoops = Integer.parseInt(in.readLine());
+                for(int loop=0; loop<numberOfLoops; loop++) builder.append(process()).append("\n");
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter22.P11659.execute();
+            Chapter22.P16139.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
