@@ -76,37 +76,62 @@ public class Main {
         static class P16139 {
             private static String element;
             private static int numberOfLoops;
-            private static HashMap<Character, int[]> record = new HashMap<>();
+            private static int[][] record;
 
-            static int process() throws IOException {
-                tokenizer = new StringTokenizer(in.readLine());
-                char target = tokenizer.nextToken().charAt(0);
-                int from = Integer.parseInt(tokenizer.nextToken());
-                int to = Integer.parseInt(tokenizer.nextToken());
-
-                if(record.containsKey(target)) {
-                    int count = record.get(target)[to]-record.get(target)[from];
-                    if(target==element.charAt(from)) count+=1;
-                    return count;
-                }
-
-                int[] counts = new int[element.length()];
-                if(element.charAt(0)==target) counts[0]=1;
-                else counts[0]=0;
-                for(int index=1; index<element.length(); index++) {
-                    if(element.charAt(index)==target) counts[index]=counts[index-1]+1;
-                    else counts[index]=counts[index-1];
-                }
-                record.put(target,counts);
-
-                int count = counts[to]-counts[from];
-                if(target==element.charAt(from)) count+=1;
-                return count;
-            }
             static void execute() throws IOException {
                 element = in.readLine();
                 numberOfLoops = Integer.parseInt(in.readLine());
-                for(int loop=0; loop<numberOfLoops; loop++) builder.append(process()).append("\n");
+
+                record = new int['z'-'a'+1][element.length()];
+                for(int index1=0; index1<'z'-'a'+1; index1++) {
+                    char target = (char)('a'+index1);
+                    if(element.charAt(0)==target) record[index1][0]=1;
+                    else record[index1][0]=0;
+                    for(int index2=1; index2<element.length(); index2++) {
+                        if(element.charAt(index2)==target) record[index1][index2] = record[index1][index2-1]+1;
+                        else record[index1][index2] = record[index1][index2-1];
+                    }
+                }
+
+                for(int loop=0; loop<numberOfLoops; loop++) {
+                    tokenizer = new StringTokenizer(in.readLine());
+                    char target = tokenizer.nextToken().charAt(0);
+                    int from = Integer.parseInt(tokenizer.nextToken());
+                    int to = Integer.parseInt(tokenizer.nextToken());
+                    int result = record[target-'a'][to] - record[target-'a'][from];
+                    if(element.charAt(from)==target) result+=1;
+                    builder.append(result).append("\n");
+                }
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
+        static class P10986 {
+            private static int length;
+            private static int target;
+            private static long[] cumulative;
+            private static long[] countsOfRemainder;
+            private static long answer;
+
+            static void execute() throws IOException {
+                tokenizer = new StringTokenizer(in.readLine());
+                length = Integer.parseInt(tokenizer.nextToken());
+                target = Integer.parseInt(tokenizer.nextToken());
+                cumulative = new long[length+1];
+                countsOfRemainder = new long[target];
+
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int index=1; index<=length; index++) {
+                    cumulative[index] = (cumulative[index-1] + Long.parseLong(tokenizer.nextToken()));
+                    countsOfRemainder[(int)(cumulative[index] % target)]++;
+                }
+
+                answer += countsOfRemainder[0];
+                for(int index=0; index<target; index++) {
+                    answer += countsOfRemainder[index] * (countsOfRemainder[index]-1) / 2;
+                }
+
+                builder.append(answer);
                 out.write(builder.toString());
                 out.flush();
             }
@@ -115,7 +140,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Chapter22.P16139.execute();
+            Chapter22.P10986.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
