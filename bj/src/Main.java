@@ -136,11 +136,46 @@ public class Main {
                 out.flush();
             }
         }
+        static class P11660 {
+            private static int size;
+            private static int numberOfLoops;
+            private static int[][] cumulative;
+
+            static void execute() throws IOException {
+                tokenizer = new StringTokenizer(in.readLine());
+                size = Integer.parseInt(tokenizer.nextToken());
+                numberOfLoops = Integer.parseInt(tokenizer.nextToken());
+
+                cumulative = new int[size+1][size+1];
+                for(int column=1; column<=size; column++) {
+                    tokenizer = new StringTokenizer(in.readLine());
+                    for(int row=1; row<=size; row++) {
+                        cumulative[column][row] = cumulative[column][row-1] + Integer.parseInt(tokenizer.nextToken());
+                    }
+                }
+
+                for(int loop=0; loop<numberOfLoops; loop++) {
+                    int answer = 0;
+                    tokenizer = new StringTokenizer(in.readLine());
+                    int column1 = Integer.parseInt(tokenizer.nextToken());
+                    int row1 = Integer.parseInt(tokenizer.nextToken());
+                    int column2 = Integer.parseInt(tokenizer.nextToken());
+                    int row2 = Integer.parseInt(tokenizer.nextToken());
+                    for(int column=column1; column<=column2; column++) {
+                        answer += cumulative[column][row2] - cumulative[column][row1-1];
+                    }
+                    builder.append(answer).append("\n");
+                }
+
+                out.write(builder.toString());
+                out.flush();
+            }
+        }
     }
 
     public static void main(String[] args) {
         try {
-            Chapter22.P10986.execute();
+            Chapter22.P11660.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
