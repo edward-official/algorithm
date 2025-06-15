@@ -1,0 +1,15 @@
+feynman algorithm
+1. write
+2. think
+3. answer
+
+virtualization of problem: concept of real world to the concept of mathematical/computational concept
+good virtualization is to leave only the core parts of the problem and discard the others
+
+when the plan is set we have to consider those three:
+- performance
+- time
+- memory
+
+solving just once is not enough for complete understand of the logics behind
+referring other people's code is helpful from time to time since it can give you a insight that you never had.

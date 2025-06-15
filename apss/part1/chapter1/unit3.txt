@@ -1,0 +1,4 @@
+big part of this book is dedicated to the problem solving
+try to solve them by yourselves since it's helpful for your development
+
+[random facts] STL: standard template library of C++

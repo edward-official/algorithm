@@ -1,0 +1,4 @@
+characteristics of actual work environment compared to algorithm contest:
+- hard to test: unit test, peer-review
+- hard to change the structure of the code
+- sacrifice of code elegance is needed from time to time

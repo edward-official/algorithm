@@ -1,0 +1,7 @@
+it seems like programmers are typing keyboard mindlessly
+but programmers have to consider :
+- the characteristics of the language they're using
+- hardware + operating system
+- precautions of library (even a framework)
+- time limit (complexity)
+- reusability
