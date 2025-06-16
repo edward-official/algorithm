@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Chapter20 {
@@ -383,6 +384,45 @@ public class Chapter20 {
             recursive(1,1);
 
             builder.append(min);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+
+    static class P15649Round2 {
+        private static int n, m;
+        private static int[] record;
+
+        private static boolean isUsedInRecord(int element, int lastIndex) {
+            for(int index=1; index<=lastIndex; index++) {
+                if(record[index]==element) return true;
+            }
+            return false;
+        }
+        private static void recursive(int index) {
+            if(index>m) {
+//                System.out.println(Arrays.toString(record));
+                for(int traverse=1; traverse<=m; traverse++) {
+                    builder.append(record[traverse]).append(" ");
+                }
+                builder.append("\n");
+                return;
+            }
+            for(int element=1; element<=n; element++) {
+                if(isUsedInRecord(element,index-1)) continue;
+                record[index] = element;
+                recursive(index+1);
+            }
+        }
+        private static void compute() {
+            record = new int[m+1];
+            recursive(1);
+        }
+        static void execute() throws IOException {
+            tokenizer = new StringTokenizer(in.readLine());
+            n = Integer.parseInt(tokenizer.nextToken());
+            m = Integer.parseInt(tokenizer.nextToken());
+            compute();
             out.write(builder.toString());
             out.flush();
         }
