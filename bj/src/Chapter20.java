@@ -389,7 +389,7 @@ public class Chapter20 {
         }
     }
 
-    static class P15649Round2 {
+    static class P15649V2 {
         private static int n, m;
         private static int[] record;
 
@@ -417,6 +417,36 @@ public class Chapter20 {
         private static void compute() {
             record = new int[m+1];
             recursive(1);
+        }
+        static void execute() throws IOException {
+            tokenizer = new StringTokenizer(in.readLine());
+            n = Integer.parseInt(tokenizer.nextToken());
+            m = Integer.parseInt(tokenizer.nextToken());
+            compute();
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P15650V2 {
+        private static int n, m;
+        private static int[] elements;
+
+        private static void chooseElement(int indexOfElements, int openingElement) {
+            if(indexOfElements>m) {
+                for(int index=1; index<=m; index++) {
+                    builder.append(elements[index]).append(" ");
+                }
+                builder.append("\n");
+                return;
+            }
+            for(int element=openingElement; element<=n; element++) {
+                elements[indexOfElements] = element;
+                chooseElement(indexOfElements+1, element+1);
+            }
+        }
+        private static void compute() {
+            elements = new int[m+1];
+            chooseElement(1,1);
         }
         static void execute() throws IOException {
             tokenizer = new StringTokenizer(in.readLine());
