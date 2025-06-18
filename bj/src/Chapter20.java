@@ -457,4 +457,31 @@ public class Chapter20 {
             out.flush();
         }
     }
+    static class P15651V2 {
+        private static int n, m;
+        private static int[] elements;
+
+        static void compute(int index) {
+            if(index>m) {
+                for(int traverse=1; traverse<=m; traverse++) builder.append(elements[traverse]).append(" ");
+                builder.append("\n");
+                return;
+            }
+            for(int element=1; element<=n; element++) {
+                elements[index] = element;
+                compute(index+1);
+            }
+        }
+        static void execute() throws IOException {
+            tokenizer = new StringTokenizer(in.readLine());
+            n = Integer.parseInt(tokenizer.nextToken());
+            m = Integer.parseInt(tokenizer.nextToken());
+
+            elements = new int[m+1];
+            compute(1);
+
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 }
