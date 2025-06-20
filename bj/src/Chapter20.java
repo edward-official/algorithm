@@ -389,7 +389,7 @@ public class Chapter20 {
         }
     }
 
-    static class P15649V2 {
+    static class P15649_2 {
         private static int n, m;
         private static int[] record;
 
@@ -427,7 +427,7 @@ public class Chapter20 {
             out.flush();
         }
     }
-    static class P15650V2 {
+    static class P15650_2 {
         private static int n, m;
         private static int[] elements;
 
@@ -457,7 +457,7 @@ public class Chapter20 {
             out.flush();
         }
     }
-    static class P15651V2 {
+    static class P15651_2 {
         private static int n, m;
         private static int[] elements;
 
@@ -484,7 +484,7 @@ public class Chapter20 {
             out.flush();
         }
     }
-    static class P15652V2 {
+    static class P15652_2 {
         private static int n, m;
         private static int[] elements;
 
@@ -507,6 +507,47 @@ public class Chapter20 {
             m = Integer.parseInt(tokenizer.nextToken());
             elements = new int[m+1];
             compute(1);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P9663_2 {
+        private static int side, count=0;
+        private static boolean[] isColumnOccupied;
+        private static boolean[] isIncreasingDiagonalOccupied;
+        private static boolean[] isDecreasingDiagonalOccupied;
+
+        private static void setOccupied(boolean value, int row, int column) {
+            isColumnOccupied[column] = value;
+            isIncreasingDiagonalOccupied[row+column] = value;
+            isDecreasingDiagonalOccupied[row-column+side] = value;
+        }
+        private static boolean isAvailable(int row, int column) {
+            if(isColumnOccupied[column]) return false;
+            else if(isIncreasingDiagonalOccupied[row+column]) return false;
+            else if(isDecreasingDiagonalOccupied[row-column+side]) return false;
+            return true;
+        }
+        private static void compute(int row) {
+            if(row>side) {
+                count++;
+                return;
+            }
+            for(int select=1; select<=side; select++) {
+                if(isAvailable(row, select)) {
+                    setOccupied(true, row, select);
+                    compute(row+1);
+                    setOccupied(false, row, select);
+                }
+            }
+        }
+        static void execute() throws IOException {
+            side = Integer.parseInt(in.readLine());
+            isColumnOccupied = new boolean[side+1];
+            isIncreasingDiagonalOccupied = new boolean[side*2+1]; //2 ~ side*2
+            isDecreasingDiagonalOccupied = new boolean[side*2+1]; //-side+1 ~ side-1
+            compute(1);
+            builder.append(count);
             out.write(builder.toString());
             out.flush();
         }
