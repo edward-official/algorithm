@@ -552,4 +552,87 @@ public class Chapter20 {
             out.flush();
         }
     }
+    static class P2580_2 {
+        private static int side = 9;
+        private static int[][] board = new int[side+1][side+1];
+        private static int opengingRow, opengingColumn;
+        private static int closingRow, closingColumn;
+
+        private static void stringBuildBoard() {
+            for(int row=1; row<=side; row++) {
+                for(int column=1; column<=side; column++) builder.append(board[row][column]).append(" ");
+                builder.append("\n");
+            }
+        }
+        private static boolean test(int element, int row, int column) {
+            /*
+            1,2,3 > 1 == 1 + 3*0
+            4,5,6 > 4 == 1 + 3*1
+            7,8,9 > 7 == 1 + 3*2
+             */
+            int openingRowForTest = 1 + (row-1)/3*3;
+            int openingColumnForTest = 1 + (column-1)/3*3;
+            for(int r=openingRowForTest; r<openingRowForTest+3; r++) {
+                for(int c=openingColumnForTest; c<openingColumnForTest+3; c++) {
+                    if(board[r][c]==element) return false;
+                }
+            }
+            for(int traverse=1; traverse<=side; traverse++) {
+                if(board[traverse][column]==element) return false;
+                if(board[row][traverse]==element) return false;
+            }
+            return true;
+        }
+        private static void compute(int row, int column) {
+//            System.err.println("\nentered");
+            for(int element=1; element<=side; element++) {
+//                System.err.println(String.format("checking point[%d,%d] element[%d]: %s", row, column, element, test(element,row,column)));
+                if(test(element,row,column)) {
+                    board[row][column]=element;
+                    if(row==closingRow && column==closingColumn) {
+                        stringBuildBoard();
+                        return;
+                    }
+                    //select next row and column
+                    boolean isNextPointFound = false;
+                    for(int nextColumn=column+1; nextColumn<=side; nextColumn++) {
+                        if(board[row][nextColumn]==0 && !isNextPointFound) {
+                            compute(row, nextColumn);
+                            isNextPointFound = true;
+                            break;
+                        }
+                    }
+                    for(int nextRow=row+1; nextRow<=side; nextRow++) {
+                        for(int nextColumn=1; nextColumn<=side; nextColumn++) {
+                            if(board[nextRow][nextColumn]==0 && !isNextPointFound) {
+                                compute(nextRow, nextColumn);
+                                isNextPointFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    board[row][column]=0;
+                }
+            }
+        }
+        static void execute() throws IOException {
+            for(int row=1; row<=side; row++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int column=1; column<=side; column++) {
+                    board[row][column] = Integer.parseInt(tokenizer.nextToken());
+                    if(board[row][column]==0) {
+                        if(opengingRow==0 && opengingColumn==0) {
+                            opengingRow=row;
+                            opengingColumn=column;
+                        }
+                        closingRow = row;
+                        closingColumn = column;
+                    }
+                }
+            }
+            compute(opengingRow,opengingColumn);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 }
