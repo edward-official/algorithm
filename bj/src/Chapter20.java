@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Chapter20 {
@@ -631,6 +632,67 @@ public class Chapter20 {
                 }
             }
             compute(opengingRow,opengingColumn);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P14888_2 {
+        private static int numberOfElements;
+        private static int closingOperatorQuantity;
+        private static int numberOfOptionsForOperator=4;
+        private static int max = Integer.MIN_VALUE;
+        private static int min = Integer.MAX_VALUE;
+        private static int[] elements;
+        private static LinkedList<Integer> operators = new LinkedList<>();
+        private static int[] countOfOperators;
+
+        private static int calculate() {
+            int result = elements[1];
+            for(int indexForOperator=1; indexForOperator<=closingOperatorQuantity; indexForOperator++) {
+                int operator = operators.get(indexForOperator-1);
+                if(operator==1) result += elements[indexForOperator+1];
+                else if(operator==2) result -= elements[indexForOperator+1];
+                else if(operator==3) result *= elements[indexForOperator+1];
+                else if(operator==4) result /= elements[indexForOperator+1];
+            }
+            return result;
+        }
+        private static void selectOperator(int indexOfOperator) {
+            if(indexOfOperator>closingOperatorQuantity) {
+                int result = calculate();
+                if(max<result) max=result;
+                if(result<min) min=result;
+                return;
+            }
+            for(int operator=1; operator<=numberOfOptionsForOperator; operator++) {
+                if(countOfOperators[operator]!=0) {
+                    countOfOperators[operator]--;
+                    operators.add(operator);
+                    selectOperator(indexOfOperator+1);
+                    operators.removeLast();
+                    countOfOperators[operator]++;
+                }
+            }
+        }
+        static void execute() throws IOException {
+            //process the input
+            numberOfElements = Integer.parseInt(in.readLine());
+            closingOperatorQuantity = numberOfElements-1;
+            elements = new int[numberOfElements+1];
+            countOfOperators = new int[numberOfOptionsForOperator+1];
+            tokenizer = new StringTokenizer(in.readLine());
+
+            for(int index=1; index<=numberOfElements; index++) {
+                elements[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=1; index<=numberOfOptionsForOperator; index++) {
+                countOfOperators[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+
+            //set up complete, proceed to compute for the max and min
+            selectOperator(1);
+            builder.append(max).append("\n").append(min).append("\n");
             out.write(builder.toString());
             out.flush();
         }
