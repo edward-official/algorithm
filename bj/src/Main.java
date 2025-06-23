@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         try {
-            Chapter20.P14888_2.execute();
+            Chapter20.P14889_2.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

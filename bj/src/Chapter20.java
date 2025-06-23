@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Chapter20 {
-    static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    static BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-    static StringBuilder builder = new StringBuilder();
-    static StringTokenizer tokenizer;
+    private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    private static BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
+    private static StringBuilder builder = new StringBuilder();
+    private static StringTokenizer tokenizer;
 
     static class P15649 {
         static int numberOfOptions;
@@ -693,6 +693,61 @@ public class Chapter20 {
             //set up complete, proceed to compute for the max and min
             selectOperator(1);
             builder.append(max).append("\n").append(min).append("\n");
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P14889_2 {
+        private static int numberOfTotal;
+        private static int numberOfTeamMembers;
+        private static int[][] table;
+        private static LinkedList<Integer> teamA = new LinkedList<>();
+        private static LinkedList<Integer> teamB = new LinkedList<>();
+        private static int minimum = Integer.MAX_VALUE;
+
+        private static int disparity() {
+            int statA=0, statB=0;
+            teamB.clear();
+            teamB.add(0);
+            for(int index=1; index<=numberOfTotal; index++) {
+                if(!teamA.contains(index)) teamB.add(index);
+            }
+            //calculate stat of team a
+            for(int index1=1; index1<=numberOfTeamMembers; index1++) {
+                for(int index2=1; index2<=numberOfTeamMembers; index2++) {
+                    statA += table[teamA.get(index1)][teamA.get(index2)];
+                    statB += table[teamB.get(index1)][teamB.get(index2)];
+                }
+            }
+            //calculate stat of team b
+            return Math.abs(statA-statB);
+        }
+        private static void backtrack(int index) {
+            if(index>numberOfTeamMembers) {
+                int disparity = disparity();
+                if(disparity<minimum) minimum=disparity;
+                return;
+            }
+            for(int select=teamA.get(index-1)+1; select<=numberOfTotal; select++) {
+                teamA.add(select);
+                backtrack(index+1);
+                teamA.removeLast();
+            }
+        }
+        static void execute() throws IOException {
+            numberOfTotal = Integer.parseInt(in.readLine());
+            numberOfTeamMembers = numberOfTotal/2;
+            table = new int[numberOfTotal+1][numberOfTotal+1];
+            teamA.add(0);teamB.add(0);
+            for(int row=1; row<=numberOfTotal; row++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int column=1; column<=numberOfTotal; column++) {
+                    //receiving the table information from terminal
+                    table[row][column] = Integer.parseInt(tokenizer.nextToken());
+                }
+            }
+            backtrack(1);
+            builder.append(minimum);
             out.write(builder.toString());
             out.flush();
         }
