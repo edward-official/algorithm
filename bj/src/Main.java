@@ -1,10 +1,6 @@
 import java.awt.*;
 import java.io.*;
-import java.lang.annotation.Target;
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 public class Main {
     private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -43,10 +39,42 @@ public class Main {
             out.flush();
         }
     }
+    static class P9184_2 {
+        private static final int offset = 50;
+        private static int[][][] record;
+        private static boolean[][][] isRecorded;
+
+        private static int compute(int a, int b, int c) {
+            if(isRecorded[a+offset][b+offset][c+offset]) return record[a+offset][b+offset][c+offset];
+            int result;
+            if(a<=0 || b<=0 || c<=0) result = 1;
+            else if(a>20 || b>20 || c>20) result = compute(20,20,20);
+            else if(a<b && b<c) result = compute(a,b,c-1) + compute(a,b-1,c-1) - compute(a,b-1,c);
+            else result = compute(a-1,b,c) + compute(a-1,b-1,c) + compute(a-1,b,c-1) - compute(a-1,b-1,c-1);
+            isRecorded[a+offset][b+offset][c+offset] = true;
+            record[a+offset][b+offset][c+offset] = result;
+            return result;
+        }
+        static void execute() throws IOException {
+            final int side = 101;
+            record = new int[side][side][side];
+            isRecorded = new boolean[side][side][side];
+            while(true) {
+                tokenizer = new StringTokenizer(in.readLine());
+                int a = Integer.parseInt(tokenizer.nextToken());
+                int b = Integer.parseInt(tokenizer.nextToken());
+                int c = Integer.parseInt(tokenizer.nextToken());
+                if(a==-1 && b==-1 && c==-1) break;
+                builder.append(String.format("w(%d, %d, %d) = %d\n", a, b, c, compute(a,b,c)));
+            }
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P24416_2.execute();
+            P9184_2.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
