@@ -185,10 +185,167 @@ public class Main {
             out.flush();
         }
     }
+    static class P1932_2 {
+        private static int side;
+        private static int[][] triangle;
+        private static int[][] optimal;
+
+        static void execute() throws IOException {
+            side = Integer.parseInt(in.readLine());
+            triangle = new int[side+1][side+1];
+            optimal = new int[side+1][side+1];
+            for(int row=1; row<=side; row++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int column=1; column<=row; column++) {
+                    triangle[row][column] = Integer.parseInt(tokenizer.nextToken());
+                    optimal[row][column] = Math.max(optimal[row-1][column],optimal[row-1][column-1]) + triangle[row][column];
+                }
+            }
+            int result = Integer.MIN_VALUE;
+            for(int column=1; column<=side; column++) {
+                int value = optimal[side][column];
+                if(result<value) result=value;
+            }
+            builder.append(result);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P2579_2 {
+        private static int numberOfSteps;
+        private static int[] points;
+        private static int[] optimal;
+
+        static void execute() throws IOException {
+            /*
+            ______
+            __OXOO
+            ___OXO
+
+            ___XOO
+            ___OXO
+             */
+            numberOfSteps = Integer.parseInt(in.readLine());
+            points = new int[numberOfSteps+1];
+            optimal = new int[numberOfSteps+1];
+            for(int index=1; index<=numberOfSteps; index++) {
+                points[index] = Integer.parseInt(in.readLine());
+            }
+            if(numberOfSteps>=1) optimal[1] = points[1];
+            if(numberOfSteps>=2) optimal[2] = points[1] + points[2];
+            if(numberOfSteps>=3) optimal[3] = points[3] + Math.max(points[1],points[2]);
+            for(int index=4; index<=numberOfSteps; index++) {
+                int candidate1 = points[index] + points[index-1] + optimal[index-3];
+                int candidate2 = points[index] + optimal[index-2];
+                optimal[index] = Math.max(candidate1,candidate2);
+            }
+            builder.append(optimal[numberOfSteps]);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P1463_2 {
+        private static int unprocessedNumber;
+        private static int[] optimum;
+
+        private static boolean isInRange(int number) {
+            if(1<=number && number<=unprocessedNumber) return true;
+            else return false;
+        }
+        static void execute() throws IOException {
+            unprocessedNumber = Integer.parseInt(in.readLine());
+            optimum = new int[unprocessedNumber+1];
+            for(int number=unprocessedNumber; number>=1; number--) {
+                if(isInRange(number*3)) {
+                    int candidate1 = optimum[number*3] + 1;
+                    int candidate2 = optimum[number*2] + 1;
+                    int candidate3 = optimum[number+1] + 1;
+                    optimum[number] = Math.min(Math.min(candidate1,candidate2),candidate3);
+                }
+                else if(isInRange(number*2)) {
+                    int candidate1 = optimum[number*2] + 1;
+                    int candidate2 = optimum[number+1] + 1;
+                    optimum[number] = Math.min(candidate1,candidate2);
+                }
+                else if(isInRange(number+1)) {
+                    optimum[number] = optimum[number+1] + 1;
+                }
+            }
+            builder.append(optimum[1]);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P10844_2 {
+        private static final int closingDigit = 9;
+        private static final int divider = 1_000_000_000;
+        private static int targetLength;
+        private static int[][] numberOfCases;
+
+        static void execute() throws IOException {
+            targetLength = Integer.parseInt(in.readLine());
+            numberOfCases = new int[targetLength+1][closingDigit+1];
+            for(int digit=1; digit<=closingDigit; digit++) {
+                numberOfCases[1][digit]=1;
+            }
+            for(int index=2; index<=targetLength; index++) {
+                numberOfCases[index][0] = numberOfCases[index-1][1];
+                for(int digit=1; digit<closingDigit; digit++) {
+                    numberOfCases[index][digit] = numberOfCases[index-1][digit-1] + numberOfCases[index-1][digit+1];
+                    numberOfCases[index][digit] %= divider;
+                }
+                numberOfCases[index][9] = numberOfCases[index-1][8];
+            }
+            int numberOfTotalCases = 0;
+            for(int digit=0; digit<=closingDigit; digit++) {
+                numberOfTotalCases += numberOfCases[targetLength][digit];
+                numberOfTotalCases %= divider;
+            }
+            builder.append(numberOfTotalCases);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P2156_2 {
+        private static int numberOfGlasses;
+        private static int[] volumes;
+        private static int[] optimum;
+
+        static void execute() throws IOException {
+            numberOfGlasses = Integer.parseInt(in.readLine());
+            volumes = new int[numberOfGlasses+1];
+            optimum = new int[numberOfGlasses+1];
+            for(int index=1; index<=numberOfGlasses; index++) {
+                volumes[index] = Integer.parseInt(in.readLine());
+            }
+            if(numberOfGlasses>=1) optimum[1] = volumes[1];
+            if(numberOfGlasses>=2) optimum[2] = volumes[2] + volumes[1];
+            if(numberOfGlasses>=3) {
+                int candidate1 = volumes[2] + volumes[3];
+                int candidate2 = volumes[3] + volumes[1];
+                int candidate3 = volumes[1] + volumes[2];
+                optimum[3] = Math.max(Math.max(candidate1,candidate2),candidate3);
+            }
+            for(int index=4; index<=numberOfGlasses; index++) {
+                /*
+                ___XOO
+                ____XO
+                _____X
+                 */
+                int candidate1 = volumes[index] + volumes[index-1] + optimum[index-3];
+                int candidate2 = volumes[index] + optimum[index-2];
+                int candidate3 = optimum[index-1];
+                optimum[index] = Math.max(Math.max(candidate1,candidate2),candidate3);
+            }
+            builder.append(optimum[numberOfGlasses]);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P1149_2.execute();
+            P2156_2.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
