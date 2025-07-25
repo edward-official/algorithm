@@ -342,10 +342,41 @@ public class Main {
             out.flush();
         }
     }
+    static class P11053_2 {
+        private static int numberOfElements;
+        private static int[] elements;
+        private static int maximumLength = -1;
+
+        private static void recursive(int criterion, int exclusiveLength, int targetIndex) {
+            if(targetIndex > numberOfElements) {
+                if(maximumLength < exclusiveLength) maximumLength = exclusiveLength;
+                return;
+            }
+            if(criterion >= elements[targetIndex]) {
+                recursive(criterion, exclusiveLength, targetIndex+1);
+                return;
+            }
+            recursive(elements[targetIndex], exclusiveLength+1, targetIndex+1);
+            recursive(criterion, exclusiveLength, targetIndex+1);
+        }
+        public static void execute() throws IOException {
+            numberOfElements = Integer.parseInt(in.readLine());
+            elements = new int[numberOfElements+1];
+
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=1; index<=numberOfElements; index++) {
+                elements[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+
+            recursive(0, 0, 1);
+            builder.append(maximumLength);
+            out.write(builder.toString());
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P2156_2.execute();
+            P11053_2.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
