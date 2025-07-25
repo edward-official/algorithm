@@ -345,32 +345,30 @@ public class Main {
     static class P11053_2 {
         private static int numberOfElements;
         private static int[] elements;
+        private static int[] memoization;
         private static int maximumLength = -1;
 
-        private static void recursive(int criterion, int exclusiveLength, int targetIndex) {
-            if(targetIndex > numberOfElements) {
-                if(maximumLength < exclusiveLength) maximumLength = exclusiveLength;
-                return;
-            }
-            if(criterion >= elements[targetIndex]) {
-                recursive(criterion, exclusiveLength, targetIndex+1);
-                return;
-            }
-            recursive(elements[targetIndex], exclusiveLength+1, targetIndex+1);
-            recursive(criterion, exclusiveLength, targetIndex+1);
-        }
         public static void execute() throws IOException {
             numberOfElements = Integer.parseInt(in.readLine());
             elements = new int[numberOfElements+1];
+            memoization = new int[numberOfElements+1];
 
             tokenizer = new StringTokenizer(in.readLine());
             for(int index=1; index<=numberOfElements; index++) {
                 elements[index] = Integer.parseInt(tokenizer.nextToken());
+                for(int traverse=0; traverse<index; traverse++) {
+                    if(elements[traverse] < elements[index] && memoization[traverse]+1 > memoization[index]) {
+                        memoization[index] = memoization[traverse] + 1;
+                    }
+                }
+                if(maximumLength < memoization[index]) {
+                    maximumLength = memoization[index];
+                }
             }
 
-            recursive(0, 0, 1);
             builder.append(maximumLength);
             out.write(builder.toString());
+            out.flush();
         }
     }
 
