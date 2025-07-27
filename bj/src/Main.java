@@ -371,10 +371,54 @@ public class Main {
             out.flush();
         }
     }
+    static class P11054_2 {
+        private static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        private static StringTokenizer tokenizer;
+        private static int numberOfTotal;
+        private static int[] elements;
+
+        public static void execute() throws IOException {
+            numberOfTotal = Integer.parseInt(in.readLine());
+            elements = new int[numberOfTotal + 1];
+            tokenizer = new StringTokenizer(in.readLine());
+            for (int index = 1; index <= numberOfTotal; index++) {
+                elements[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+
+            int[] lis = new int[numberOfTotal + 1];
+            int[] lds = new int[numberOfTotal + 1];
+
+            for (int i = 1; i <= numberOfTotal; i++) {
+                lis[i] = 1;
+                for (int j = 1; j < i; j++) {
+                    if (elements[j] < elements[i]) {
+                        lis[i] = Math.max(lis[i], lis[j] + 1);
+                    }
+                }
+            }
+
+            for (int i = numberOfTotal; i >= 1; i--) {
+                lds[i] = 1;
+                for (int j = numberOfTotal; j > i; j--) {
+                    if (elements[j] < elements[i]) {
+                        lds[i] = Math.max(lds[i], lds[j] + 1);
+                    }
+                }
+            }
+
+            int maxLength = 0;
+            for (int i = 1; i <= numberOfTotal; i++) {
+                maxLength = Math.max(maxLength, lis[i] + lds[i] - 1);
+            }
+
+            System.out.println(maxLength);
+        }
+    }
+
 
     public static void main(String[] args) {
         try {
-            P11053_2.execute();
+            P11054_2.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
