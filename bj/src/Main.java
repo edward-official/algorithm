@@ -36,10 +36,40 @@ public class Main {
             out.flush();
         }
     }
+    static class P15650_3 {
+        private static int n, m;
+        private static int[] array;
+
+        private static void recursive(int index) {
+            if(index>m) {
+                builder.append(array[1]);
+                for(int traverse=2; traverse<=m; traverse++) {
+                    builder.append(" ").append(array[traverse]);
+                }
+                builder.append("\n");
+                return;
+            }
+            for(int element=array[index-1]+1; element<=n; element++) {
+                array[index] = element;
+                recursive(index+1);
+            }
+        }
+        public static void execute() throws IOException {
+            tokenizer = new StringTokenizer(in.readLine());
+            n = Integer.parseInt(tokenizer.nextToken());
+            m = Integer.parseInt(tokenizer.nextToken());
+
+            array = new int[m+1];
+            recursive(1);
+
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P15649_3.execute();
+            P15650_3.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
