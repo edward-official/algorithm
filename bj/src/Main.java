@@ -134,38 +134,29 @@ public class Main {
         private static int n, numberOfCases = 0;
         private static int[] board;
 
-        private static void putQueen(int row, int column) {
-            board[row] = column;
-        }
-        private static void removeQueen(int row, int column) {
-            board[row] = 0;
-        }
-        private static boolean isValid(int row, int column) {
-            for (int i = 1; i < row; i++) {
-                if (board[i] == column || Math.abs(i - row) == Math.abs(board[i] - column)) {
-                    return false;
-                }
+        private static boolean isPossible(int row, int column) {
+            for(int traverse=1; traverse<row; traverse++) {
+                if(board[traverse]==column) return false;
+                else if(board[traverse]==row+column-traverse) return false;
+                else if(board[traverse]==column-row+traverse) return false;
             }
             return true;
         }
         private static void recursive(int row) {
-            if (row > n) {
+            if(row>n) {
                 numberOfCases++;
                 return;
             }
-
-            for (int col = 1; col <= n; col++) {
-                if (isValid(row, col)) {
-                    putQueen(row, col);
-                    recursive(row + 1);
-                    removeQueen(row, col);
+            for(int column=1; column<=n; column++) {
+                if(isPossible(row, column)) {
+                    board[row] = column;
+                    recursive(row+1);
                 }
             }
         }
-
         public static void execute() throws IOException {
             n = Integer.parseInt(in.readLine());
-            board = new int[n + 1];
+            board = new int[n+1];
             recursive(1);
             builder.append(numberOfCases);
             out.write(builder.toString());
