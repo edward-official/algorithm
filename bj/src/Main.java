@@ -231,10 +231,66 @@ public class Main {
             recursive(1);
         }
     }
+    static class P14888_3 {
+        private static int numberOfOperands, kindOfOperators = 4;
+        private static int[] operands;
+        private static int[] countOfOperators = new int[kindOfOperators+1];
+        private static int maxValue = Integer.MIN_VALUE, minValue = Integer.MAX_VALUE;
+
+        private static void recursive(int operatorIndex, int currentValue) {
+            if(operatorIndex==numberOfOperands) {
+                for(int selector=1; selector<=kindOfOperators; selector++) {
+                    if(countOfOperators[selector]==0) continue;
+                    if(selector==1) currentValue = currentValue + operands[operatorIndex+1];
+                    else if(selector==2) currentValue = currentValue - operands[operatorIndex+1];
+                    else if(selector==3) currentValue = currentValue * operands[operatorIndex+1];
+                    else if(selector==4) currentValue = currentValue / operands[operatorIndex+1];
+                }
+                if(currentValue>maxValue) maxValue = currentValue;
+                if(currentValue<minValue) minValue = currentValue;
+                return;
+            }
+
+            for(int selector=1; selector<=kindOfOperators; selector++) {
+                if(countOfOperators[selector]==0) continue;
+                countOfOperators[selector]--;
+                if(selector==1) {
+                    recursive(operatorIndex+1, currentValue + operands[operatorIndex+1]);
+                }
+                else if(selector==2) {
+                    recursive(operatorIndex+1, currentValue - operands[operatorIndex+1]);
+                }
+                else if(selector==3) {
+                    recursive(operatorIndex+1, currentValue * operands[operatorIndex+1]);
+                }
+                else if(selector==4) {
+                    recursive(operatorIndex+1, currentValue / operands[operatorIndex+1]);
+                }
+                countOfOperators[selector]++;
+            }
+        }
+        public static void execute() throws IOException {
+            numberOfOperands = Integer.parseInt(in.readLine());
+            operands = new int[numberOfOperands+1];
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=1; index<=numberOfOperands; index++) {
+                operands[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=1; index<=kindOfOperators; index++) {
+                countOfOperators[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+            recursive(1, operands[1]);
+
+            builder.append(maxValue).append("\n").append(minValue);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P2580_3.execute();
+            P14888_3.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
