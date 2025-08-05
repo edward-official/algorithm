@@ -287,10 +287,75 @@ public class Main {
             out.flush();
         }
     }
+    static class P14889_3 {
+        private static int numberOfTotalMembers, numberOfTeamMembers;
+        private static int[][] cooperation;
+        private static int[] team1, team2;
+        private static int minimumDifference = Integer.MAX_VALUE;
+
+        private static int totalAbility(int[] team) {
+            int result = 0;
+            for(int memberIndex1: team) {
+                for(int memberIndex2: team) {
+                    result += cooperation[memberIndex1][memberIndex2];
+                }
+            }
+            return result;
+        }
+        private static void updateTeam2() {
+            int indexForTeam2=1;
+//            System.out.println(Arrays.toString(team1));
+            for(int target=1; target<=numberOfTotalMembers; target++) {
+                boolean isTargetInTeam1 = false;
+                for(int memberFromTeam1: team1) {
+                    if(target==memberFromTeam1) {
+                        isTargetInTeam1 = true;
+                    }
+                }
+//                System.out.println(String.format("[%d] isTargetInTeam1: %s", target, isTargetInTeam1));
+                if(!isTargetInTeam1) team2[indexForTeam2++] = target;
+            }
+        }
+        private static int evaluateDifference() {
+            updateTeam2();
+            int result = totalAbility(team1) - totalAbility(team2);
+            if(result<0) result = 0 - result;
+            return result;
+        }
+        private static void recursive(int indexForTeam1) {
+            if(indexForTeam1>numberOfTeamMembers) {
+                int difference = evaluateDifference();
+                if(difference<minimumDifference) minimumDifference = difference;
+                return;
+            }
+            for(int selectMember=team1[indexForTeam1-1]+1; selectMember<=numberOfTotalMembers; selectMember++) {
+                team1[indexForTeam1] = selectMember;
+                recursive(indexForTeam1+1);
+            }
+        }
+        public static void execute() throws IOException {
+            numberOfTotalMembers = Integer.parseInt(in.readLine());
+            numberOfTeamMembers = numberOfTotalMembers/2;
+            cooperation = new int[numberOfTotalMembers+1][numberOfTotalMembers+1];
+            team1 = new int[numberOfTeamMembers+1];
+            team2 = new int[numberOfTeamMembers+1];
+            for(int row=1; row<=numberOfTotalMembers; row++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int column=1; column<=numberOfTotalMembers; column++) {
+                    cooperation[row][column] = Integer.parseInt(tokenizer.nextToken());
+                }
+            }
+
+            recursive(1);
+            builder.append(minimumDifference);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P14888_3.execute();
+            P14889_3.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
