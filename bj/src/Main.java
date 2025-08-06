@@ -43,10 +43,43 @@ public class Main {
             out.flush();
         }
     }
+    static class P9184 {
+        private static int range = 20;
+        private static int[][][] memo = new int[range+1][range+1][range+1];
+        private static boolean[][][] isMemoValid = new boolean[range+1][range+1][range+1];
+
+        private static int w(int a, int b, int c) {
+            int result;
+            if(a<=0 || b<=0 || c<=0) return  1;
+            else if(a>20 || b>20 || c>20) return w(20,20,20);
+            else if(isMemoValid[a][b][c]) return memo[a][b][c];
+            else if(a < b && b < c) result = w(a, b, c-1) + w(a, b-1, c-1) - w(a, b-1, c);
+            else result = w(a-1, b, c) + w(a-1, b-1, c) + w(a-1, b, c-1) - w(a-1, b-1, c-1);
+            isMemoValid[a][b][c] = true;
+            memo[a][b][c] = result;
+            return result;
+        }
+        private static void execute() throws IOException {
+            int a, b, c;
+            while(true) {
+                tokenizer = new StringTokenizer(in.readLine());
+                a = Integer.parseInt(tokenizer.nextToken());
+                b = Integer.parseInt(tokenizer.nextToken());
+                c = Integer.parseInt(tokenizer.nextToken());
+                if(a==-1 && b==-1 && c==-1) break;
+                else {
+                    int result = w(a,b,c);
+                    builder.append(String.format("w(%d, %d, %d) = %d\n", a,b,c,result));
+                }
+            }
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P24416.execute();
+            P9184.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
