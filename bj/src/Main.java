@@ -76,10 +76,34 @@ public class Main {
             out.flush();
         }
     }
+    static class P1904 {
+        private static int n;
+        private static int[] memo;
+
+        public static void execute() throws IOException {
+            n = Integer.parseInt(in.readLine());
+            int numberOfPossibleAnswers;
+            if(n==1) numberOfPossibleAnswers=1;
+            else if(n==2) numberOfPossibleAnswers=2;
+            else {
+                memo = new int[n+1];
+                memo[1] = 1;
+                memo[2] = 2;
+                for(int index=3; index<=n; index++) {
+                    memo[index] = (memo[index-1] + memo[index-2]) % 15746;
+                }
+                numberOfPossibleAnswers = memo[n];
+            }
+            builder.append(numberOfPossibleAnswers);
+            out.write(builder.toString());
+            out.flush();
+
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P9184.execute();
+            P1904.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
