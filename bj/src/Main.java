@@ -100,10 +100,36 @@ public class Main {
 
         }
     }
+    static class P9461 {
+        private static int closingRange = 100;
+        private static long[] padovan = new long[closingRange+1];
+
+        private static void updatePadovan() {
+            padovan[1] = 1;
+            padovan[2] = 1;
+            padovan[3] = 1;
+            padovan[4] = 2;
+            padovan[5] = 2;
+            for(int index=6; index<=closingRange; index++) {
+                padovan[index] = padovan[index-1] + padovan[index-5];
+            }
+        }
+        public static void execute() throws IOException {
+            updatePadovan();
+            int repetition = Integer.parseInt(in.readLine());
+            int n;
+            for(int r=1; r<=repetition; r++) {
+                n = Integer.parseInt(in.readLine());
+                builder.append(padovan[n]).append("\n");
+            }
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P1904.execute();
+            P9461.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
