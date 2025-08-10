@@ -126,10 +126,31 @@ public class Main {
             out.flush();
         }
     }
+    static class P1912_HELPED {
+        private static int quantityOfElements;
+        private static int[] element;
+        private static int[] inclusiveMaxValue;
+
+        public static void execute() throws IOException {
+            quantityOfElements = Integer.parseInt(in.readLine());
+            element = new int[quantityOfElements + 1];
+            inclusiveMaxValue = new int[quantityOfElements + 1];
+            tokenizer = new StringTokenizer(in.readLine());
+            int absoluteMaximum = Integer.MIN_VALUE;
+            for(int index=1; index<=quantityOfElements; index++) {
+                element[index] = Integer.parseInt(tokenizer.nextToken());
+                inclusiveMaxValue[index] = Math.max(inclusiveMaxValue[index - 1] + element[index], element[index]);
+                if(absoluteMaximum < inclusiveMaxValue[index]) absoluteMaximum = inclusiveMaxValue[index];
+            }
+            builder.append(absoluteMaximum);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P9461.execute();
+            P1912_HELPED.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
