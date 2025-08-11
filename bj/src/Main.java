@@ -147,10 +147,40 @@ public class Main {
             out.flush();
         }
     }
+    static class P1149 {
+        private static int numberOfHouses;
+        private final static int numberOfColors = 3;
+        private static int[][] costs;
+        private static int[][] accumulative;
+
+        public static void execute() throws IOException {
+            numberOfHouses = Integer.parseInt(in.readLine());
+            costs = new int[numberOfHouses+1][numberOfColors];
+            accumulative = new int[numberOfHouses+1][numberOfColors];
+            for(int index=1; index<=numberOfHouses; index++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int color=0; color<numberOfColors; color++) {
+                    costs[index][color] = Integer.parseInt(tokenizer.nextToken());
+                }
+                for(int color=0; color<numberOfColors; color++) {
+                    accumulative[index][color] = costs[index][color];
+                    accumulative[index][color] += Math.min(accumulative[index-1][(color+1)%numberOfColors], accumulative[index-1][(color+2)%numberOfColors]);
+                }
+            }
+            int result = Integer.MAX_VALUE;
+            for(int color=0; color<numberOfColors; color++) {
+                int temp = accumulative[numberOfHouses][color];
+                if(temp<result) result = temp;
+            }
+            builder.append(result);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P1912_HELPED.execute();
+            P1149.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
