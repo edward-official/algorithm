@@ -204,10 +204,45 @@ public class Main {
             out.flush();
         }
     }
+    static class P2579 {
+        private static int numberOfStairs;
+        private static int[] stairs;
+        private static int[] accumulative;
+
+        public static void execute() throws IOException {
+            numberOfStairs = Integer.parseInt(in.readLine());
+            stairs = new int[numberOfStairs + 1];
+            accumulative = new int[numberOfStairs + 1];
+
+            for(int index=1; index<=numberOfStairs; index++) {
+                stairs[index] = Integer.parseInt(in.readLine());
+            }
+            accumulative[1] = stairs[1];
+            if(numberOfStairs>=2) accumulative[2] = stairs[1] + stairs[2];
+            if(numberOfStairs>=3) {
+                for(int index=3; index<=numberOfStairs; index++) {
+                    int candidate1 = accumulative[index - 2] + stairs[index];
+                    int candidate2 = accumulative[index - 3] + stairs[index - 1] + stairs[index];
+                    accumulative[index] = Math.max(candidate1, candidate2);
+                }
+            }
+
+            builder.append(accumulative[numberOfStairs]);
+            out.write(builder.toString());
+            out.flush();
+
+            /*
+            OXOO
+            OOXO
+            XOOX
+            OXOX
+             */
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P1932.execute();
+            P2579.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
