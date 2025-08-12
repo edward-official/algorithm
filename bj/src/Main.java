@@ -177,10 +177,37 @@ public class Main {
             out.flush();
         }
     }
+    static class P1932 {
+        private static int numberOfRows;
+        private static int[][] triangle;
+        private static int[][] accumulative;
+
+        public static void execute() throws IOException {
+            numberOfRows = Integer.parseInt(in.readLine());
+            triangle = new int[numberOfRows+1][numberOfRows+1];
+            accumulative = new int[numberOfRows+1][numberOfRows+1];
+            for(int row=1; row<=numberOfRows; row++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                for(int column=1; column<=row; column++) {
+                    triangle[row][column] = Integer.parseInt(tokenizer.nextToken());
+                    accumulative[row][column] = triangle[row][column];
+                    accumulative[row][column] += Math.max(accumulative[row-1][column-1], accumulative[row-1][column]);
+                }
+            }
+            int result = Integer.MIN_VALUE;
+            for(int column=1; column<=numberOfRows; column++) {
+                int temp = accumulative[numberOfRows][column];
+                if(result<temp) result = temp;
+            }
+            builder.append(result);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P1149.execute();
+            P1932.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
