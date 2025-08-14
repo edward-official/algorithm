@@ -239,10 +239,34 @@ public class Main {
              */
         }
     }
+    static class P1463 {
+        private static int[] accumulative;
+        private static int targetElement;
+
+        public static void execute() throws IOException {
+            targetElement = Integer.parseInt(in.readLine());
+            accumulative = new int[targetElement + 1];
+            accumulative[1] = 0;
+            for(int element=2; element<=targetElement; element++) {
+                accumulative[element] = accumulative[element - 1] + 1;
+                if(element%3==0) {
+                    int candidate = accumulative[element / 3] + 1;
+                    if(candidate < accumulative[element]) accumulative[element] = candidate;
+                }
+                if(element%2==0) {
+                    int candidate = accumulative[element / 2] + 1;
+                    if(candidate < accumulative[element]) accumulative[element] = candidate;
+                }
+            }
+            builder.append(accumulative[targetElement]);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P2579.execute();
+            P1463.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
