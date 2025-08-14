@@ -263,10 +263,42 @@ public class Main {
             out.flush();
         }
     }
+    static class P10844 {
+        private static int numberOfDigits;
+        private static long[][] accumulative;
+        private static final int ten = 10;
+        private static final int modulator = 1_000_000_000;
+
+        public static void execute() throws IOException {
+            numberOfDigits = Integer.parseInt(in.readLine());
+            accumulative = new long[numberOfDigits + 1][ten + 2];
+            for(int element=1; element<ten; element++) {
+                accumulative[1][element + 1] = 1;
+            }
+            for(int index=2; index<=numberOfDigits; index++) {
+                for(int element=0; element<ten; element++) {
+                    accumulative[index][element + 1] =
+                            (accumulative[index - 1][element] + accumulative[index - 1][element + 2]) % modulator;
+                }
+            }
+            long result = 0;
+            for(int element=0; element<ten; element++) {
+                result += accumulative[numberOfDigits][element + 1];
+            }
+//            for(int index=1; index<=numberOfDigits; index++) {
+//                System.out.println(Arrays.toString(accumulative[index]));
+//            }
+
+            result %= modulator;
+            builder.append(result);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P1463.execute();
+            P10844.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
