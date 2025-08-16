@@ -295,10 +295,41 @@ public class Main {
             out.flush();
         }
     }
+    static class P2156 {
+        private static int numberOfGlasses;
+        private static int[] glasses;
+        private static int[] accumulative;
+
+        public static void execute() throws IOException {
+            numberOfGlasses = Integer.parseInt(in.readLine());
+            glasses = new int[numberOfGlasses + 1];
+            accumulative = new int[numberOfGlasses + 1];
+
+            for(int index=1; index<=numberOfGlasses; index++) {
+                glasses[index] = Integer.parseInt(in.readLine());
+            }
+            if(numberOfGlasses>=1) accumulative[1] = glasses[1];
+            if(numberOfGlasses>=2) accumulative[2] = glasses[1] + glasses[2];
+            for(int index=3; index<=numberOfGlasses; index++) {
+                int candidate1 = glasses[index] + Math.max(accumulative[index - 2],
+                        accumulative[index - 3] + glasses[index - 1]);
+                int candidate2 = accumulative[index - 1];
+                accumulative[index] = Math.max(candidate1, candidate2);
+            }
+            builder.append(accumulative[numberOfGlasses]);
+            out.write(builder.toString());
+            out.flush();
+            /*
+            _____XO
+            ____XOO
+            ______X
+             */
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P10844.execute();
+            P2156.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
