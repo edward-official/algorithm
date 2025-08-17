@@ -326,10 +326,40 @@ public class Main {
              */
         }
     }
+    static class P11053 {
+        private static int numberOfElements;
+        private static int[] elements;
+        private static int[] inclusive;
+        private static int finalAnswer = 0;
+
+        public static void execute() throws IOException {
+            numberOfElements = Integer.parseInt(in.readLine());
+            elements = new int[numberOfElements + 1];
+            inclusive = new int[numberOfElements + 1];
+
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=1; index<=numberOfElements; index++) {
+                elements[index] = Integer.parseInt(tokenizer.nextToken());
+                int initializer = 1;
+                for(int traverse=1; traverse<index; traverse++) {
+                    if(elements[traverse] < elements[index]) {
+                        int temp = inclusive[traverse] + 1;
+                        if(initializer < temp) initializer = temp;
+                    }
+                }
+                inclusive[index] = initializer;
+                if(finalAnswer < initializer) finalAnswer = initializer;
+            }
+
+            builder.append(finalAnswer);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P2156.execute();
+            P11053.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
