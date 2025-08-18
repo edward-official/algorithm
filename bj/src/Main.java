@@ -409,10 +409,45 @@ public class Main {
             out.flush();
         }
     }
+    static class P2565 {
+        private static int numberOfWires;
+        private static final int range = 500;
+        private static int[] wires = new int[range + 1];
+        private static int[] accumulative = new int[range + 1];
+
+        public static void execute() throws IOException {
+            numberOfWires = Integer.parseInt(in.readLine());
+            for(int read=1; read<=numberOfWires; read++) {
+                tokenizer = new StringTokenizer(in.readLine());
+                int from = Integer.parseInt(tokenizer.nextToken());
+                int to = Integer.parseInt(tokenizer.nextToken());
+                wires[from] = to;
+            }
+
+            int longest = Integer.MIN_VALUE;
+            for(int index=1; index<=range; index++) {
+                if(wires[index]==0) continue;
+                int assign = 1;
+                for(int traverse=1; traverse<index; traverse++) {
+                    if(wires[traverse] == 0) continue;
+                    if(wires[traverse] < wires[index]) {
+                        int temp = accumulative[traverse] + 1;
+                        if(assign < temp) assign = temp;
+                    }
+                }
+                accumulative[index] = assign;
+                if(longest < assign) longest = assign;
+            }
+
+            builder.append(numberOfWires - longest);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P11054.execute();
+            P2565.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
