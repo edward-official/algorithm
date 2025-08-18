@@ -356,10 +356,63 @@ public class Main {
             out.flush();
         }
     }
+    static class P11054 {
+        private static int numberOfElements;
+        private static int[] elements;
+        private static int[] accumulativeForward;
+        private static int[] accumulativeReverse;
+
+        private static int bitonic() {
+            int finalAnswer = 0;
+            for(int index=1; index<=numberOfElements; index++) {
+                int temp = accumulativeForward[index] + accumulativeReverse[index] - 1;
+                if(finalAnswer < temp) finalAnswer = temp;
+            }
+            return finalAnswer;
+        }
+        private static void configuration() {
+            for(int index=1; index<=numberOfElements; index++) {
+                int assignForward = 1;
+                for(int traverse=1; traverse<index; traverse++) {
+                    if(elements[traverse] < elements[index]) {
+                        int temp = accumulativeForward[traverse] + 1;
+                        if(assignForward < temp) assignForward = temp;
+                    }
+                }
+                accumulativeForward[index] = assignForward;
+            }
+            for(int index=numberOfElements; index>=1; index--) {
+                int assignReverse = 1;
+                for(int traverse=numberOfElements; traverse>index; traverse--) {
+                    if(elements[traverse] < elements[index]) {
+                        int temp = accumulativeReverse[traverse] + 1;
+                        if(assignReverse < temp) assignReverse = temp;
+                    }
+                }
+                accumulativeReverse[index] = assignReverse;
+            }
+        }
+        public static void execute() throws IOException {
+            numberOfElements = Integer.parseInt(in.readLine());
+            elements = new int[numberOfElements + 1];
+            accumulativeForward = new int[numberOfElements + 1];
+            accumulativeReverse = new int[numberOfElements + 1];
+
+            tokenizer = new StringTokenizer(in.readLine());
+            for(int index=1; index<=numberOfElements; index++) {
+                elements[index] = Integer.parseInt(tokenizer.nextToken());
+            }
+
+            configuration();
+            builder.append(bitonic());
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P11053.execute();
+            P11054.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
