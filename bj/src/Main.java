@@ -444,10 +444,64 @@ public class Main {
             out.flush();
         }
     }
+    static class P9251_ImproperTimeComplexity {
+        private static String element1, element2;
+        private static int finalAnswer = 0;
+
+        private static void recursive(int openingIndex1, int openingIndex2, int length) {
+            if(openingIndex1>=element1.length() || openingIndex2>=element2.length()) {
+                if(finalAnswer < length) finalAnswer = length;
+                return;
+            }
+//            System.out.println(String.format("checking %s[%d], %s[%d]", element1, openingIndex1, element2, openingIndex2));
+            for(int index2=openingIndex2; index2<element2.length(); index2++) {
+                if(element1.charAt(openingIndex1)==element2.charAt(index2)) {
+                    recursive(openingIndex1 + 1, index2 + 1, length + 1);
+                }
+            }
+            recursive(openingIndex1 + 1, openingIndex2, length);
+        }
+        public static void execute() throws IOException {
+            element1 = in.readLine();
+            element2 = in.readLine();
+            recursive(0,0,0);
+            builder.append(finalAnswer);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
+    static class P9251 {
+        private static String sequence1, sequence2;
+        private static int size1, size2;
+        private static int[][] accumulative;
+
+        public static void execute() throws IOException {
+            sequence1 = in.readLine();
+            sequence2 = in.readLine();
+            size1 = sequence1.length();
+            size2 = sequence2.length();
+            accumulative = new int[size1 + 1][size2 + 1];
+
+            for(int index1=1; index1<=size1; index1++) {
+                for(int index2=1; index2<=size2; index2++) {
+                    if (sequence1.charAt(index1 - 1) == sequence2.charAt(index2 - 1)) {
+                        accumulative[index1][index2] = accumulative[index1 - 1][index2 - 1] + 1;
+                    } else {
+                        accumulative[index1][index2] = Math.max(accumulative[index1 - 1][index2],
+                                accumulative[index1][index2 - 1]);
+                    }
+                }
+            }
+
+            builder.append(accumulative[size1][size2]);
+            out.write(builder.toString());
+            out.flush();
+        }
+    }
 
     public static void main(String[] args) {
         try {
-            P2565.execute();
+            P9251.execute();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
